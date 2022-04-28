@@ -17,11 +17,47 @@
         <style>
             body {
                 font-family: 'Nunito';
+                background-color: #042f41
+            }
+            .typewriter {
+                color: white;
+                font-size: 4rem;
+                overflow: hidden; /* Ensures the content is not revealed until the animation */
+                border-right: .15em solid rgb(255, 255, 255); /* The typwriter cursor */
+                white-space: nowrap; /* Keeps the content on a single line */
+                margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+                letter-spacing: .15em; /* Adjust as needed */
+                animation: 
+                    typing 3.5s steps(40, end),
+                    blink-caret .75s step-end infinite;
+                }
+
+                /* The typing effect */
+                @keyframes  typing {
+                from { width: 0 }
+                to { width: 100% }
+                }
+
+                /* The typewriter cursor effect */
+                @keyframes  blink-caret {
+                from, to { border-color: transparent }
+                50% { border-color: rgb(255, 255, 255); }
             }
         </style>
     </head>
     <body class="antialiased">
-        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">    
+        <div class="relative flex items-top justify-center min-h-screen sm:items-center sm:pt-0">    
+            <div class="relative flex items-top justify-center min-h-screen sm:items-center sm:pt-0">
+            
+                <div class="max-w-6xl mx-auto sm:px-6 lg:px-8"> 
+                    <div>
+                        <h1 class="typewriter">Trabajando en la aplicación.</h1>
+                    </div>
+                    <div class="flex justify-center">
+                        <img src="https://c.tenor.com/2uyENRmiUt0AAAAC/coding.gif" alt="" srcset="">
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

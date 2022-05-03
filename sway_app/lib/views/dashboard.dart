@@ -1,7 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
-
 class DashboardV extends StatelessWidget {
   const DashboardV({Key? key}) : super(key: key);
 
@@ -24,13 +23,11 @@ class Dashboard extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-
   @override
-  State<Dashboard> createState() => _Dashboard();
+  State<Dashboard> createState() => _DashboardState();
 }
 
-class _Dashboard extends State<Dashboard>  {
-
+class _DashboardState extends State<Dashboard> {
   int index = 2;
 
   @override
@@ -58,55 +55,58 @@ class _Dashboard extends State<Dashboard>  {
       )
     ];
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Montserrat', backgroundColor: Colors.white),
-      home: Scaffold(
-        appBar: AppBar(
-          leading: const BackButton(
-            color: Colors.black,
-          ),
-          actions: [
-            InkWell(
-              onTap: () {},
-              child: Container(
-                margin: const EdgeInsets.only(right: 5.0),
-                width: 50,
-                child: const Icon(
-                  Icons.share,
-                  size: 25,
-                  color: Colors.black,
-                ),
-              ),
-            )
-          ],
-          backgroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: true,
-          title: const Text(
-            'Sway',
-            style: TextStyle(
+    return MediaQuery(
+        data: const MediaQueryData(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              fontFamily: 'Montserrat', backgroundColor: Colors.white),
+          home: Scaffold(
+            appBar: AppBar(
+              leading: const BackButton(
                 color: Colors.black,
-                fontFamily: 'Montserrat-bold',
-                fontSize: 25),
+              ),
+              actions: [
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 5.0),
+                    width: 50,
+                    child: const Icon(
+                      Icons.share,
+                      size: 25,
+                      color: Colors.black,
+                    ),
+                  ),
+                )
+              ],
+              backgroundColor: Colors.white,
+              elevation: 0,
+              centerTitle: true,
+              title: const Text(
+                'Sway',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontFamily: 'Montserrat-bold',
+                    fontSize: 25),
+              ),
+            ),
+            bottomNavigationBar: CurvedNavigationBar(
+              color: Colors.black12,
+              backgroundColor: Colors.transparent,
+              items: iconosMenus,
+              height: 60,
+              index: index,
+              onTap: (index) => setState(() {
+                this.index = index;
+              }),
+            ),
+            body: Center(
+              child: Text(
+                '$index',
+              ),
+            ),
           ),
-        ),
-        bottomNavigationBar: CurvedNavigationBar(
-          color: Colors.cyan,
-          backgroundColor: Colors.transparent,
-          items: iconosMenus,
-          height: 60,
-          index: index,
-          onTap:(index) => setState(() {
-            this.index = index;  
-          }),
-        ),
-        body: Center(
-          child: Text(
-            '$index',
-          ),
-        ),
-      ),
-    );
+        ));
   }
 }

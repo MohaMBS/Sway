@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->boolean('company_id')->nullable();
             $table->boolean('is_public')->default(1);
             $table->boolean('is_baned')->default(0);
-            $table->boolean('is_admin')->default(0)
+            $table->boolean('is_admin')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

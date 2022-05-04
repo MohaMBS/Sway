@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class LoanStatus extends Migration
+class CreateLoanStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,10 @@ class LoanStatus extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('loan_statuses', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +26,6 @@ class LoanStatus extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('loan_statuses');
     }
 }

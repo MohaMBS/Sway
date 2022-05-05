@@ -21,6 +21,10 @@ class CreateReviewsTable extends Migration
             $table->boolean('is_anonym')->default('0');
             $table->boolean('is_deleted')->default('0');
             $table->timestamps();
+
+            // Relaciones de bbdd
+            $table->foreign('user_from_id')->references('id')->on('users');
+            $table->foreign('user_to_id')->references('id')->on('users');
         });
     }
 

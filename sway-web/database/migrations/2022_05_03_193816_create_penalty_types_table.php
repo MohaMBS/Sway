@@ -15,6 +15,8 @@ class CreatePenaltyTypesTable extends Migration
     {
         Schema::create('penalty_types', function (Blueprint $table) {
             $table->id();
+            $table->integer('value')->unique();
+            $table->text('description',150);
             $table->timestamps();
         });
     }

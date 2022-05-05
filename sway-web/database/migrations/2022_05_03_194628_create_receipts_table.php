@@ -15,6 +15,9 @@ class CreateReceiptsTable extends Migration
     {
         Schema::create('receipts', function (Blueprint $table) {
             $table->id();
+            $table->integer('loan_id');
+            $table->text('src_pdf');
+            $table->boolean('is_deleted');
             $table->timestamps();
         });
     }

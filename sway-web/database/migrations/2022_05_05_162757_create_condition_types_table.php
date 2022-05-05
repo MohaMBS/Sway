@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLoanStatusesTable extends Migration
+class CreateConditionTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateLoanStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::create('loan_statuses', function (Blueprint $table) {
+        Schema::create('condition_types', function (Blueprint $table) {
             $table->id();
             $table->integer('value')->unique();
             $table->text('description',150);
@@ -28,6 +28,6 @@ class CreateLoanStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('loan_statuses');
+        Schema::dropIfExists('condition_types');
     }
 }

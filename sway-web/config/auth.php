@@ -40,11 +40,20 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-
+        
+        /* Antigua config para los usuarios.
         'api' => [
             'driver' => 'token',
             'provider' => 'users',
             'hash' => false,
+        ],*/
+
+        //Nueva config para poder usar el passaport con OAuth2
+        
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+            'hash' => true,
         ],
     ],
 

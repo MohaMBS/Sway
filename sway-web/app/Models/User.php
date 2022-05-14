@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','company_id',
     ];
 
     /**
@@ -47,7 +47,23 @@ class User extends Authenticatable
         return $this->hasOne(Company::class);
     }
 
+    public function myContacts(){
+        return $this->hasMany(Contact::class,'user_from_id','id');
+    }
+
+    public function connectedWith(){
+        return $this->hasMany(Contact::class,'user_to_id','id');
+    }
+
     public function contacts(){
-        return $this->hasMany(Contact::class,'user_from_id','id')->where('connection_status_id','=',0);
+        return $this->myContacts()->union($this->connectedWith())->where('connection_status_id','=',0);
+    }
+
+    public function loaned(){
+        return $this->hasMany(Loan::class,'user_from_id','id');
+    }
+
+    public function loans(){
+        return $this->hasMany(Loan::class,'user_to_id','id');
     }
 }

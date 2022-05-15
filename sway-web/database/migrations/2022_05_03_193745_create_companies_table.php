@@ -16,7 +16,7 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('cif',12)->unique();
-            $table->integer('user_id');
+           //$table->integer('user_id');
             $table->text('fix_number',15);
             $table->text('address');
             $table->text('city');
@@ -26,7 +26,7 @@ class CreateCompaniesTable extends Migration
             $table->timestamps();
         
             //referencias a la tabla de usuarios para la relacion
-            $table->foreign('user_id')->references('id')->on('users');
+            //$table->foreign('user_id')->references('id')->on('users');
         });
     }
 

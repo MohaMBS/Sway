@@ -45,6 +45,9 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::put('user/connect/accept',[UserController::class,'acceptConnection'])->name('passport.acceptConnection'); //Aceptar conexcionde un usuario
     Route::get('users/',[UserController::class,'getPublicUser'])->name('passport.getUSers'); // Usuarios que tiene el perfil en public y puedes agregarlos
     Route::get('user/connect',[FriendController::class,'myConnections'])->name('passport.myCcontacts'); // Para saber tu amistades
+    Route::delete('user/connect/',[FriendController::class,'deleteConnection'])->name('passport.myCcontacts'); // Para borar una amistad
+    Route::put('user/privacy/',[UserController::class,'myProfilePrivateMode'])->name('passport.myCcontacts'); // Para borar una amistad
+    //Route::delete('user/privacy/',[FriendController::class,'deleteConnection'])->name('passport.myCcontacts'); // Para borar una amistad
 
     // RUTAS PARA GESTIONAR LOS PRESTAMOS
     Route::get('loan/',[LoanController::class, 'index'])->name('passport.indexLoans');//Obtener todos los prestamos del usuario;

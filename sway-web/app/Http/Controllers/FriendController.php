@@ -33,6 +33,24 @@ class FriendController extends BaseController
         } 
     }
 
+    public function deleteConnection(Request $request){
+        if($request->has('user_to_id')){
+            $status = ContactS::where('description', 'like','Deleted')->first();
+            $statusConnect = ContactS::where('description', 'like','Connected')->first();
+            $contact = Contact::where([['user_from_id','like',auth()->user()->id],['user_to_id','like',$request->user_to_id],['connection_status_id','like',$statusConnect->id]])->first();
+            if($contact){
+                if($contact->update(['connection_status_id' => $status->id])){
+                    return $this->sendRespons($contact,'User deleted.');
+                }
+                return $this->sendError('Unkow error.','Check all the parametrs you sending.');
+            }
+            return $this->sendError('Contact not exist.','This user is not connected with you so i cant be deleted.');
+            
+        }else{
+            return $this->sendError('Missed parameter.','Missed the id of the user.');
+        }
+    }
+
     public function myConnections(){
         $data = [];
 
@@ -47,4 +65,10 @@ class FriendController extends BaseController
         
         return $this->sendRespons($data,'Your connections');
     }
+
+
+    public function getPublicUsers(){
+        
+    }
+
 }

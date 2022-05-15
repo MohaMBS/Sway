@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Contact;
-
+use Auth;
 
 class UserController extends BaseController
 {
@@ -37,7 +37,27 @@ class UserController extends BaseController
 
 
     public function getPublicUser(Request $request){
-        return $this->sendRespons('This are the users, you can add.',User::where([['is_public','=',true],['id','=',auth()->user()->id]])->get());
+        return $this->sendRespons('This are the users, you can add.',User::where([['is_public','=',true],['id','!=',auth()->user()->id]])->get());
+    }
+
+    public function myProfilePrivateMode(Request $request){
+        try {
+            $user = Auth::user();
+            if($request->has('is_public')){
+                $user->is_public = $request->is_public;
+            }else{
+                $user->is_public = false;
+            }
+            $user->save();
+            
+            return $this->sendRespons('Perfil updated.',$user);
+        } catch (\Throwable $th) {
+            return $this->sendError('Erro to update.',$th->getMessage());
+        }
+    }
+
+    public function myProfilePublic(){
+
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Company;
 use Laravel\Passport\TokenRepository;
 
 class PassportController extends BaseController
@@ -22,6 +23,27 @@ class PassportController extends BaseController
             'password'=>'required',
             'confirm_password'=>'required|same:password'
         ]);
+        
+        if($request->has('for_company')){
+            $validatorCompany = Validator::make($request->all(),[
+                'cif'=>'required',
+                'fix_number'=>'required',
+                'address'=>'required',
+                'country'=>'required',
+                'city'=>'required',
+                'pc'=>'required',
+            ]);
+            if ($validatorCompany->fails()) {  
+                // return "Error";
+                return $this->sendError(
+                        'Error de validacion',
+                        $validatorCompany->errors(),
+                        422);
+            }
+            $input = $request->all();
+            $company = Company::create($input);
+        }
+
         if ($validator->fails()) {  
             // return "Error";
             return $this->sendError(
@@ -29,10 +51,10 @@ class PassportController extends BaseController
                     $validator->errors(),
                     422);
         }
-
         $input = $request->all();
         //ciframos el password
         $input['password'] = bcrypt($request->get('password'));
+        $input['company_id'] = $company->id;
         $user = User::create($input);
         //creamos un nuevo token de autenticación
         $token = $user->createToken('laravel-passport')->accessToken;

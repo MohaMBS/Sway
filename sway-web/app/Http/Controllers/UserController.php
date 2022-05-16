@@ -37,7 +37,15 @@ class UserController extends BaseController
 
 
     public function getPublicUser(Request $request){
-        return $this->sendRespons('This are the users, you can add.',User::where([['is_public','=',true],['id','!=',auth()->user()->id]])->get());
+        try {
+            $request->validate([
+                'query'=>'required'
+            ]);
+            return $this->sendRespons('This are the users, you can add.',User::where([['is_public','=',true],['name','like','%'.$request->input('query').'%'],['id','!=',auth()->user()->id]])->get());
+        } catch (\Throwable $th) {
+            return $this->sendError('Erro loking for user.',$th->getMessage());
+        }
+        
     }
 
     public function myProfilePrivateMode(Request $request){

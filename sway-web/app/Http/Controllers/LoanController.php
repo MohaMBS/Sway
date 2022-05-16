@@ -22,8 +22,10 @@ class LoanController extends BaseController
     }
 
     public function store(Request $request){
-        $user_id = auth()->user()->id;
-        return $this->sendRespons(['id'=>$user_id],'Store de loan, de momento solo da el id del usuario.');
+        /*$user_id = auth()->user()->id;
+        return $this->sendRespons(['id'=>$user_id],'Store de loan, de momento solo da el id del usuario.');*/
+
+        return $this->sendError('Action not permited.','This action is not permited to update a loan.');
     }
     
     public function delete(Request $request){
@@ -59,10 +61,12 @@ class LoanController extends BaseController
                     'description'=> $request->description,
                     'type_loan_id'=>LoanT::find($request->type_loan_id)->id,
                     'limit_date' => $request->limit_date,
-                    'loan_status_id' => 1,
+                    'loan_status_id' => LoanS::where('description','like','Waiting confirmation')->first()->id,
                     'document_src'=> $src_document
                 ]);
                 $status = LoanS::find($newLoan->loan_status_id);
+                $user_id = auth()->user()->id;
+                return $this->sendRespons($newLoan,'Create de loan, de momento solo da el id del usuario.');
             }else{
                 $validated->errors()->add('condition_type_id', 'Please give condition_type_id.');
             }
@@ -70,8 +74,6 @@ class LoanController extends BaseController
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->sendError('Failed to update.',$e->getMessage());
         }
-        $user_id = auth()->user()->id;
-        return $this->sendRespons('qwd','Create de loan, de momento solo da el id del usuario.');
     }
 
     public function decodeDocumentSave($request){
@@ -80,7 +82,7 @@ class LoanController extends BaseController
             $validator = $request->validate([ 
                 'file' => 'required|mimes:png,jpeg,doc,docx,pdf,txt,csv|max:2048',
             ]);
-            $destinationPath = '/public/img/loans/';
+            $destinationPath = '/img/loans/';
             $file = $request->file('file');
             $filename = Str::random(15).$file->getClientOriginalName();
             $file->move(public_path() . $destinationPath, $filename);
@@ -90,5 +92,27 @@ class LoanController extends BaseController
         }finally{
             return $filename_to_save_in_db;
         }
+    }
+
+    public function changeStatLoan(Request $request){
+        $request->validate([
+            'loan_id' => 'required',
+            'status_id' => 'required',
+        ]);
+
+        try {
+            $loan = Loan::where('id','=',$request->loan_id)->where('user_from_id','=',auth()->user()->id)->orWhere('user_to_id','=',auth()->user()->id)->first();    
+            $loanS = LoanS::find($request->status_id);
+            $loan->loan_status_id = $loanS->id;
+            if($loan->save()){
+                return $this->sendRespons(['loan'=>$loan,'status'=>$loanS],'Change succes.');
+            }else{
+                return $this->sendError('Unkow error.','Error ocured when updating the loan.');
+            }
+        } catch (\Throwable $th) {
+            return $this->sendError('Error on update loan.',$th->getMessage());
+        }
+
+        return $this->sendRespons('Si','Si');
     }
 }

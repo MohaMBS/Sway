@@ -54,7 +54,7 @@ class PassportController extends BaseController
         $input = $request->all();
         //ciframos el password
         $input['password'] = bcrypt($request->get('password'));
-        $input['company_id'] = $company->id;
+        $input['company_id'] = (isset($company)) ? $company->id : null;
         $user = User::create($input);
         //creamos un nuevo token de autenticación
         $token = $user->createToken('laravel-passport')->accessToken;

@@ -63,8 +63,18 @@ class _DashboardState extends State<Dashboard> {
               fontFamily: 'Montserrat', backgroundColor: Colors.white),
           home: Scaffold(
             appBar: AppBar(
-              leading: const BackButton(
-                color: Colors.black,
+              leadingWidth: 100,
+              leading: InkWell(
+                onTap: () { Navigator.of(context).pop();},
+                child: Container(
+                  margin: const EdgeInsets.only(right: 5.0),
+                  width: 50,
+                  child: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 25,
+                    color: Colors.black,
+                  ),
+                ),
               ),
               actions: [
                 InkWell(

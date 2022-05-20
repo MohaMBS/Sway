@@ -1,39 +1,73 @@
-import 'package:flutter/material.dart';
-import 'package:sway_app/bloc/formProvider.dart';
-import 'package:sway_app/bloc/services/authService.dart';
-import 'package:sway_app/views/app/dashboard.dart';
-import 'package:sway_app/views/auth/login.dart';
-import 'package:sway_app/views/auth/register.dart';
-import 'package:sway_app/views/auth/resetPassword.dart';
-import 'package:sway_app/views/welcome/welcome.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sway_app/auth/userAuth.dart';
+import 'package:sway_app/screens/dashboard.dart';
+import 'package:sway_app/screens/login.dart';
+import 'package:after_layout/after_layout.dart';
 
 void main() {
-  //runApp(const DashboardV());
-  runApp(FromProvider(
-    child: MaterialApp(
+  runApp(const MyApp());  
+}
+
+class MyApp extends StatelessWidget{
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Welcome back to Sway",
-      //initialRoute: '/login',
-      home: FutureBuilder(
-        future: AuthService.getToken(),
-        builder:(_, snapshot){
-          if(snapshot.connectionState == ConnectionState.waiting){
-            return const CircularProgressIndicator();
-          }else if( snapshot.hasData){
-            return const Dashboard();
-          }else{
-            return const LoginScreen();
-          }
-        }, 
-        ),
+      home: const AuthChek(),
       routes: {
-        '/':(context) => const Welcome(),
-        '/login':(context) => const LoginScreen(),
-        '/dashboard'  :(context) =>const DashboardV(),
-        '/register': ((context) =>const Register()),
-        '/reset_password': ((context) =>const ResetPassword())
+        '/dashboard': ((context) => const DashboardV())
       },
-    ),
-  ));
+    );
+  }
+
+}
+
+
+class AuthChek extends StatefulWidget {
+  const AuthChek({ Key? key }) : super(key: key);
+
+  @override
+  State<AuthChek> createState() => _AuthChekState();
+}
+
+class _AuthChekState extends State<AuthChek> with AfterLayoutMixin<AuthChek> {
+
+  Future checkFirstSeen() async {
+    print('hola des de el check ');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.containsKey('UserAuth'));
+
+    if (_seen) {
+      print('Existe');
+      String dataUser = prefs.getString('UserAuth')!;
+      UserAuth.fromJson(jsonDecode(dataUser));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const DashboardV()));
+    } else {
+      print('No Existe');
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const Login()));
+    }
+  }
+  
+ @override
+  void afterFirstLayout(BuildContext context) {
+    // Calling the same function "after layout" to resolve the issue.
+    checkFirstSeen();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Text('Loading...'),
+      ),
+    );
+  }
 }

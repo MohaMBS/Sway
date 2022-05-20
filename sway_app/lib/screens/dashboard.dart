@@ -1,5 +1,12 @@
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sway_app/auth/userAuth.dart';
+import 'package:sway_app/screens/homedash.dart';
+import 'package:sway_app/screens/loancenter.dart';
+import 'package:sway_app/screens/login.dart';
+import 'package:sway_app/screens/profile.dart';
 
 class DashboardV extends StatelessWidget {
   const DashboardV({Key? key}) : super(key: key);
@@ -28,31 +35,32 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int index = 2;
-
+  int index = 1;
+  final userAuth = UserAuth.e(); 
   @override
   Widget build(BuildContext context) {
-    const iconosMenus = <Widget>[
+    final iconosMenus = <Widget>[
       Icon(
-        Icons.contacts_rounded,
+        Icons.adjust,
         size: 30,
-      ),
-      Icon(
-        Icons.add,
-        size: 30,
+        color: Colors.green.shade800,
       ),
       Icon(
         Icons.dashboard,
         size: 30,
+        color: Colors.green.shade800,
       ),
       Icon(
-        Icons.usb_rounded,
+        Icons.manage_accounts,
         size: 30,
+        color: Colors.green.shade800,
       ),
-      Icon(
-        Icons.settings,
-        size: 30,
-      )
+    ];
+
+    final screen = [
+      const LoanCenter(),
+      const HomeDas(),
+      const ProfileSettings(),
     ];
 
     return MediaQuery(
@@ -63,28 +71,23 @@ class _DashboardState extends State<Dashboard> {
               fontFamily: 'Montserrat', backgroundColor: Colors.white),
           home: Scaffold(
             appBar: AppBar(
-              leadingWidth: 100,
-              leading: InkWell(
-                onTap: () { Navigator.of(context).pop();},
-                child: Container(
-                  margin: const EdgeInsets.only(right: 5.0),
-                  width: 50,
-                  child: const Icon(
-                    Icons.arrow_back_ios,
-                    size: 25,
-                    color: Colors.black,
-                  ),
-                ),
+              leading: const BackButton(
+                color: Colors.black,
               ),
               actions: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    SharedPreferences preferences = await SharedPreferences.getInstance();
+                    await preferences.clear();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => const Login()));
+                  },
                   child: Container(
                     margin: const EdgeInsets.only(right: 5.0),
                     width: 50,
                     child: const Icon(
-                      Icons.share,
-                      size: 25,
+                      Icons.logout,
+                      size: 20,
                       color: Colors.black,
                     ),
                   ),
@@ -102,7 +105,8 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             bottomNavigationBar: CurvedNavigationBar(
-              color: Colors.black12,
+              animationCurve: Curves.easeInOutCubicEmphasized,
+              color: Colors.teal.shade50,
               backgroundColor: Colors.transparent,
               items: iconosMenus,
               height: 60,
@@ -111,11 +115,7 @@ class _DashboardState extends State<Dashboard> {
                 this.index = index;
               }),
             ),
-            body: Center(
-              child: Text(
-                '$index',
-              ),
-            ),
+            body: screen[index],
           ),
         ));
   }

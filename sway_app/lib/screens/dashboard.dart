@@ -2,6 +2,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sway_app/auth/auth.dart';
 import 'package:sway_app/auth/userAuth.dart';
 import 'package:sway_app/screens/homedash.dart';
 import 'package:sway_app/screens/loancenter.dart';
@@ -77,6 +78,7 @@ class _DashboardState extends State<Dashboard> {
               actions: [
                 InkWell(
                   onTap: () async {
+                    Auth().lgout();
                     SharedPreferences preferences = await SharedPreferences.getInstance();
                     await preferences.clear();
                     Navigator.of(context).pushReplacement(

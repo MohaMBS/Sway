@@ -6,9 +6,16 @@ import 'package:sway_app/auth/userAuth.dart';
 import 'package:sway_app/screens/dashboard.dart';
 import 'package:sway_app/screens/login.dart';
 import 'package:after_layout/after_layout.dart';
+import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MyApp());  
+  WidgetsFlutterBinding.ensureInitialized();
+  //runApp(const MyApp());  
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((value) => runApp(const MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget{
@@ -38,18 +45,15 @@ class AuthChek extends StatefulWidget {
 class _AuthChekState extends State<AuthChek> with AfterLayoutMixin<AuthChek> {
 
   Future checkFirstSeen() async {
-    print('hola des de el check ');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool _seen = (prefs.containsKey('UserAuth'));
 
     if (_seen) {
-      print('Existe');
       String dataUser = prefs.getString('UserAuth')!;
       UserAuth.fromJson(jsonDecode(dataUser));
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const DashboardV()));
     } else {
-      print('No Existe');
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const Login()));
     }

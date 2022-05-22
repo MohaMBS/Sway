@@ -37,9 +37,27 @@ class ContactApi with ApiInfo{
 
   Future<ResponseStatus> deleteContact(String id) async{
     
-    print('Api deleting');
+    print('Api deleting to '+id.toString());
     var url = Uri.http(ApiInfo.baseUrl,'/api/user/connect',{'user_to_id':id});
     final response = await http.delete(url,headers: ApiInfo.headers);
+    try {
+      print(response.body);
+      if (response.statusCode == 200) {
+        return ResponseStatus('deleted', true);
+      } else {
+        return ResponseStatus('not deleted', false);
+      }
+    } catch (e) {
+      print(e.toString());
+      return ResponseStatus('not deleted', false);
+    }
+  }
+
+  Future<ResponseStatus> accpetRequest(String contactId) async{
+    
+    print('Api deleting');
+    var url = Uri.http(ApiInfo.baseUrl,'/api/user/connect/accept',{'contact_id':contactId});
+    final response = await http.put(url,headers: ApiInfo.headers);
     try {
       print(response.body);
       if (response.statusCode == 200) {

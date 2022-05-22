@@ -16,6 +16,7 @@ class HomeDas extends StatefulWidget {
 class _HomeDasState extends State<HomeDas> {
   var misContact = <Widget>[];
   var contacts = <Contact>[];
+  var resquestFriend = <Contact>[];
   late bool statAlert = false;
 
   @override
@@ -44,9 +45,28 @@ class _HomeDasState extends State<HomeDas> {
     }
   }
 
-  getCon() async{
+  getRequesF() async {
+    if (statAlert == false) {
+      await ContactApi().getContacts().then((response) {
+        Map<String, dynamic> map = json.decode(response.body);
+        Map<String, dynamic> data = map["data"];
+        for (var item in data['waitng_connection']) {
+          print('peticioens');
+          Contact c = Contact.formJson(item);
+          resquestFriend.add(c);
+        }
+      });
+    }
+  }
+
+  getCon() async {
     await getContact();
     return misContact;
+  }
+
+  getFriendRequest() async {
+    await getRequesF();
+    return resquestFriend;
   }
 
   @override
@@ -178,9 +198,10 @@ class _HomeDasState extends State<HomeDas> {
                                                         if (statAlert) {
                                                           detelContact(
                                                               e.userId);
-                                                          setState(() {getContact();});
+                                                          setState(() {
+                                                            getContact();
+                                                          });
                                                         }
-                                                        
                                                       },
                                                     ),
                                                   ),
@@ -217,193 +238,113 @@ class _HomeDasState extends State<HomeDas> {
               Container(
                 width: 100,
                 height: MediaQuery.of(context).size.height * 0.2,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFEEEEEE),
-                ),
+                decoration: const BoxDecoration(),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     const Text(
                       'Peticiones de amistades',
                       textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFEEEEEE),
-                              ),
-                              child: Row(
+                        child: FutureBuilder(
+                            future: getFriendRequest(),
+                            builder: ((context, snapshot) {
+                              return Column(
                                 mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.15,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFEEEEEE),
-                                    ),
-                                    child: const Icon(
-                                      Icons.settings_outlined,
-                                      color: Colors.black,
-                                      size: 24,
-                                    ),
-                                  ),
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.7,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFEEEEEE),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: const [
-                                        Text(
-                                          'Juan manito mano s',
-                                          textAlign: TextAlign.center,
+                                  resquestFriend.isEmpty
+                                      ? const Center(
+                                        child:  Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child:  Text('No tienes solicitudes', textAlign: TextAlign.center, style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.15,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFEEEEEE),
-                                    ),
-                                    child: const Icon(
-                                      Icons.settings_outlined,
-                                      color: Colors.black,
-                                      size: 24,
-                                    ),
-                                  ),
+                                      )
+                                      : Column(
+                                          children: resquestFriend.map((e) {
+                                          return Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 50,
+                                            decoration: const BoxDecoration(
+                                              color: Color(0xFFEEEEEE),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.15,
+                                                  height: 50,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Color(0xFFEEEEEE),
+                                                  ),
+                                                  child: const Icon(
+                                                    FontAwesomeIcons.userSecret,
+                                                    color: Colors.black,
+                                                    size: 24,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.7,
+                                                  height: 50,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Color(0xFFEEEEEE),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children:  [
+                                                      Text(
+                                                        e.name,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.15,
+                                                  height: 50,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Color(0xFFEEEEEE),
+                                                  ),
+                                                  child: IconButton(
+                                                    icon: const Icon(Icons.check),
+                                                    color: Colors.green,
+                                                    iconSize: 24,
+                                                    onPressed:() async{
+                                                      print('id contac'+e.contactId.toString());
+                                                      await accpetRequest(e.contactId);
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }).toList()),
                                 ],
-                              ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFEEEEEE),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.15,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFEEEEEE),
-                                    ),
-                                    child: const Icon(
-                                      Icons.settings_outlined,
-                                      color: Colors.black,
-                                      size: 24,
-                                    ),
-                                  ),
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.7,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFEEEEEE),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: const [
-                                        Text(
-                                          'Juan manito mano s',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.15,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFEEEEEE),
-                                    ),
-                                    child: const Icon(
-                                      Icons.settings_outlined,
-                                      color: Colors.black,
-                                      size: 24,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 50,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFEEEEEE),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.15,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                    ),
-                                    child: const Icon(
-                                      Icons.settings_outlined,
-                                      color: Colors.black,
-                                      size: 24,
-                                    ),
-                                  ),
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.7,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: const [
-                                        Text(
-                                          'Juan manito mano s',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.15,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFEEEEEE),
-                                    ),
-                                    child: const Icon(
-                                      Icons.settings_outlined,
-                                      color: Colors.black,
-                                      size: 24,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                              );
+                            })),
                       ),
                     ),
                   ],
@@ -417,17 +358,24 @@ class _HomeDasState extends State<HomeDas> {
   }
 
   detelContact(int userId) async {
-
     ResponseStatus res = await ContactApi().deleteContact(userId.toString());
-    if(res.status){
+    if (res.status) {
       contacts.removeWhere((element) => element.userId == userId);
       setState(() {
         getCon();
       });
     }
-    print(contacts);
-    print('borrado');
-    print(contacts);
+  }
+
+  accpetRequest(int contactId) async{
+    ResponseStatus res = await ContactApi().accpetRequest(contactId.toString());
+    if(res.status){
+      resquestFriend.removeWhere((element) => element.contactId == contactId);
+      setState(() {
+        misContact.clear();
+        getContact();
+      });
+    }
   }
 
   Future<void> showMyDialog(String name) async {

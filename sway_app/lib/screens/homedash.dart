@@ -26,12 +26,14 @@ class _HomeDasState extends State<HomeDas> {
   }
 
   getContact() async {
+    contacts.clear();
     if (statAlert == false) {
       await ContactApi().getContacts().then((response) {
         Map<String, dynamic> map = json.decode(response.body);
         Map<String, dynamic> data = map["data"];
         //misContact = data.map((model) => Contact.formJson(model)).toList();
         for (var item in data['connecteds']) {
+          print('Contactos');
           Contact c = Contact.formJson(item);
           /*misContact.add(ContactField(
             name: c.name,
@@ -43,6 +45,7 @@ class _HomeDasState extends State<HomeDas> {
         }
       });
     }
+    return contacts;
   }
 
   getRequesF() async {
@@ -98,7 +101,7 @@ class _HomeDasState extends State<HomeDas> {
                       height: 200,
                       child: SingleChildScrollView(
                         child: FutureBuilder(
-                            future: getCon(),
+                            future: getContact(),
                             builder: (context, snapshot) {
                               return Column(
                                 children: [
@@ -373,7 +376,6 @@ class _HomeDasState extends State<HomeDas> {
       resquestFriend.removeWhere((element) => element.contactId == contactId);
       setState(() {
         misContact.clear();
-        getContact();
       });
     }
   }

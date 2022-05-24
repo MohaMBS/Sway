@@ -40,6 +40,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     // RUTAS PARA GESTIONES DE USUARIOS
     Route::post('user/connect/',[FriendController::class,'makeContact'])->name('passport.makeContactUser'); //Ruta para poder agregar a un usuario.
+    Route::post('user/update/',[UserController::class,'updateInfo'])->name('passport.userUpdate'); //Ruta para poder agregar a un usuario.
     Route::get('logout', [PassportController::class, 'logout'])->name('passport.logout'); //Ruta para poder cerrar session
     Route::get('user/info', [UserController::class, 'userDetail'])->name('passport.userInfo'); //Ruta para obtener toda la informacion de un usuario
     Route::put('user/connect/accept',[UserController::class,'acceptConnection'])->name('passport.acceptConnection'); //Aceptar conexcionde un usuario
@@ -47,6 +48,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('user/connect',[FriendController::class,'myConnections'])->name('passport.myCcontacts'); // Para saber tu amistades
     Route::delete('user/connect/',[FriendController::class,'deleteConnection'])->name('passport.myCcontacts'); // Para borar una amistad
     Route::put('user/privacy/',[UserController::class,'myProfilePrivateMode'])->name('passport.myCcontacts'); // Para borar una amistad
+    Route::get('user/request',[FriendController::class,'resquetsFriends'])->name('passport.Request');
     //Route::delete('user/privacy/',[FriendController::class,'deleteConnection'])->name('passport.myCcontacts'); // Para borar una amistad
 
     // RUTAS PARA GESTIONAR LOS PRESTAMOS

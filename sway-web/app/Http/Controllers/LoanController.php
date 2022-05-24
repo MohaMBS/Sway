@@ -77,10 +77,10 @@ class LoanController extends BaseController
     }
 
     public function decodeDocumentSave($request){
-        $filename_to_save_in_db = '';
+        $filename_to_save_in_db = null;
         try {
             $validator = $request->validate([ 
-                'file' => 'required|mimes:png,jpeg,doc,docx,pdf,txt,csv|max:2048',
+                'file' => 'required|mimes:png,jpeg,doc,docx,pdf,txt|max:2048',
             ]);
             $destinationPath = '/img/loans/';
             $file = $request->file('file');

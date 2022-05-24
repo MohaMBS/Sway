@@ -37,7 +37,8 @@ class FriendController extends BaseController
         if($request->has('user_to_id')){
             $status = ContactS::where('description', 'like','Deleted')->first();
             $statusConnect = ContactS::where('description', 'like','Connected')->first();
-            $contact = Contact::where([['user_from_id','like',auth()->user()->id],['user_to_id','like',$request->user_to_id],['connection_status_id','like',$statusConnect->id]])->first();
+            //$contact = Contact::where([['user_from_id','=',auth()->user()->id],['user_to_id','=',$request->user_to_id],['connection_status_id','like',$statusConnect->id]])->first();
+            $contact = Contact::where('user_from_id','=',auth()->user()->id)->where('user_to_id','=',$request->user_to_id);
             if($contact){
                 if($contact->update(['connection_status_id' => $status->id])){
                     return $this->sendRespons($contact,'User deleted.');
@@ -56,19 +57,26 @@ class FriendController extends BaseController
 
         $statusConnected = ContactS::where('description', 'like','Connected')->first();
         $statusWaiting = ContactS::where('description', 'like','Waiting confirmation')->first();
-
-        $contactsConnecteds = Contact::where('connection_status_id','=',$statusConnected->id)->where('user_from_id','=',auth()->user()->id)->get();
-        $contactWaiting = Contact::where('connection_status_id','=',$statusWaiting->id)->where('user_from_id','=',auth()->user()->id)->get();
-        
-        
+        /*contactWaiting
+        $contactsConnecteds = Contact::where('connection_status_id','=',$statusConnected->id)->with('friendInfo')->where('user_from_id','=',auth()->user()->id)->orWhere('user_from_id','=',auth()->user()->id)->get();
+        $contactWaiting = Contact::where('connection_status_id','=',$statusWaiting->id)->with('friendInfo')->where('user_to_id','=',auth()->user()->id)->get();
+        */
+        $contactsConnecteds = Contact::where('user_from_id','=',auth()->user()->id)->where('connection_status_id','=',$statusConnected->id)->with('friendInfo')->get();
+        $contactWaiting = Contact::where('user_to_id','=',auth()->user()->id)->where('connection_status_id','=',$statusWaiting->id)->with('friendInfo')->get();
         $data = ['connecteds'=>$contactsConnecteds,'waitng_connection'=>$contactWaiting];
         
         return $this->sendRespons($data,'Your connections');
     }
 
+    public function resquetsFriends(Request $request){
+        $statusWaiting = ContactS::where('description', 'like','Waiting confirmation')->first();
 
-    public function getPublicUsers(){
-        
+        return $this->sendRespons();
+    }
+
+    public function getPublicUsers(Request $request){
+        $publicUsers = User::where('is_public','=',true)->where('company_id','=',null)->get();
+        return $this->sendRespons($publicUsers,'The public users.');
     }
 
 }

@@ -25,7 +25,7 @@ class UserController extends BaseController
         if($request->contact_id){
             $user_id = auth()->user()->id;
             try {
-                $contact = Contact::where('user_to_id','=',$user_id)->where('id','=',$request->contact_id)->update(['connection_status_id'=>0]);
+                $contact = Contact::where('id','=',$request->contact_id)->update(['connection_status_id'=>1]);
                 return $this->sendRespons($contact,'Updated.');
             } catch (\Illuminate\Database\QueryException $e) {
                 return $this->sendError('Failed to update.',$e->getMessage());
@@ -41,7 +41,7 @@ class UserController extends BaseController
             $request->validate([
                 'query'=>'required'
             ]);
-            return $this->sendRespons('This are the users, you can add.',User::where([['is_public','=',true],['name','like','%'.$request->input('query').'%'],['id','!=',auth()->user()->id]])->get());
+            return $this->sendRespons(User::where([['is_public','=',true],['name','ilike','%'.$request->input('query').'%'],['id','!=',auth()->user()->id]])->get(),'This are the users, you can add.');
         } catch (\Throwable $th) {
             return $this->sendError('Erro loking for user.',$th->getMessage());
         }
@@ -82,4 +82,48 @@ class UserController extends BaseController
         ], 200);
     }
 
+
+    function updateInfo(Request $request){
+        $user =Auth::user();
+        $validator;
+        if($request->has('name')){
+            $validator = Validator::make(
+                $request->all(),[
+                    'name'=>'required|min:4',
+                ]);
+        }
+        if ($validator->fails()) {  
+            // return "Error";
+            return $this->sendError(
+                    'Error de validacion',
+                    $validator->errors(),
+                    422);
+        }else{
+            $user->name = $request['name'];
+        }
+
+        if($request->has('email')){
+            if(auth()->user()->email != $request->email){
+
+                $validator = Validator::make(
+                    $request->all(),[
+                        'email'=>'required|email|unique:users,email',
+                    ]);
+                
+                if ($validator->fails()) {  
+                    // return "Error";
+                    return $this->sendError(
+                            'Error de validacion',
+                            $validator->errors(),
+                            422);
+                }else{
+                    $user->email = $request['email'];
+                }
+            }
+        }
+        $user->save();
+        $user['phone'] = (auth()->user()->phone) ? auth()->user()->phone : '';
+        $user['token'] = $request->bearerToken();
+        return $this->sendRespons($user,'Updated');
+    }
 }

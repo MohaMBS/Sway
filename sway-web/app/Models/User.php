@@ -44,7 +44,7 @@ class User extends Authenticatable
      * Relacion con la compañia
      */
     public function company(){
-        return $this->hasOne(Company::class);
+        return $this->hasOne(Company::class,'id','company_id');
     }
 
     public function myContacts(){

@@ -83,6 +83,7 @@ class PassportController extends BaseController
         $validator = Validator::make($input, $validate_data);
         
         if ($validator->fails()) {
+            return $this->sendError($validator->errors(),'Faltan datos...');
             return response()->json([
                 'success' => false,
                 'message' => 'Please see errors parameter for all errors.',
@@ -93,7 +94,9 @@ class PassportController extends BaseController
         // authentication attempt
         if (auth()->attempt($input)) {
             $token = auth()->user()->createToken('passport_token')->accessToken;
-            return $this->sendRespons(["token"=> $token],'User login succesfully, Use token to authenticate.');
+            $user = ['name'=> auth()->user()->name,'email'=>auth()->user()->email,'is_public'=>auth()->user()->is_public];
+            $phoneUser = auth()->user()->phone == null ? '': auth()->user()->phone;
+            return $this->sendRespons(["token"=> $token,'name'=>auth()->user()->name,'phone'=>$phoneUser,'email'=>auth()->user()->email],'User login succesfully, Use token to authenticate.');
         } else {
             return $this->sendError('User authentication failed.','Wrong credentials, Try again login.',401);
         }

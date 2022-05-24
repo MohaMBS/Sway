@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart';
 import 'package:sway_app/auth/auth.dart';
 import 'package:sway_app/auth/userAuth.dart';
 import 'package:sway_app/dao/contact.dart';
@@ -121,94 +123,97 @@ class _HomeDasState extends State<HomeDas> {
                                         )
                                       : Column(
                                           children: contacts.map((e) {
-                                            return Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 50,
-                                              decoration: const BoxDecoration(
-                                                color: Color(0xFFEEEEEE),
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                children: [
-                                                  Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.15,
-                                                    height: 50,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      color: Color(0xFFEEEEEE),
+                                            return Padding(
+                                              padding: const EdgeInsets.only(top:8.0),
+                                              child: Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: 50,
+                                                decoration: const BoxDecoration(
+                                                  color: Color(0xFFEEEEEE),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.max,
+                                                  children: [
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.15,
+                                                      height: 50,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Color(0xFFEEEEEE),
+                                                      ),
+                                                      child: const Icon(
+                                                        Icons
+                                                            .account_circle_rounded,
+                                                        color: Colors.black,
+                                                        size: 45,
+                                                      ),
                                                     ),
-                                                    child: const Icon(
-                                                      Icons
-                                                          .account_circle_rounded,
-                                                      color: Colors.black,
-                                                      size: 45,
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.7,
+                                                      height: 50,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Color(0xFFEEEEEE),
+                                                      ),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.max,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: [
+                                                          Text(
+                                                            e.name,
+                                                            textAlign:
+                                                                TextAlign.center,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize: 20),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.7,
-                                                    height: 50,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      color: Color(0xFFEEEEEE),
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.15,
+                                                      height: 50,
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Color(0xFFEEEEEE),
+                                                      ),
+                                                      child: IconButton(
+                                                        icon: const Icon(
+                                                            Icons.block),
+                                                        color: Colors.red,
+                                                        iconSize: 35,
+                                                        onPressed: () async {
+                                                          await showMyDialog(
+                                                              e.name);
+                                                          if (statAlert) {
+                                                            detelContact(
+                                                                e.userId);
+                                                            setState(() {
+                                                              getContact();
+                                                            });
+                                                          }
+                                                        },
+                                                      ),
                                                     ),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        Text(
-                                                          e.name,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 20),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.15,
-                                                    height: 50,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      color: Color(0xFFEEEEEE),
-                                                    ),
-                                                    child: IconButton(
-                                                      icon: const Icon(
-                                                          Icons.block),
-                                                      color: Colors.red,
-                                                      iconSize: 35,
-                                                      onPressed: () async {
-                                                        await showMyDialog(
-                                                            e.name);
-                                                        if (statAlert) {
-                                                          detelContact(
-                                                              e.userId);
-                                                          setState(() {
-                                                            getContact();
-                                                          });
-                                                        }
-                                                      },
-                                                    ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             );
                                           }).toList(),
@@ -230,6 +235,14 @@ class _HomeDasState extends State<HomeDas> {
                           ),
                           onPressed: () {
                             print('IconButton pressed ...');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (BuildContext context) =>
+                                    FullScreenDialog(),
+                                fullscreenDialog: true,
+                              ),
+                            );
                           },
                         ),
                         const Text('Añadir contacto')
@@ -262,86 +275,99 @@ class _HomeDasState extends State<HomeDas> {
                                 children: [
                                   resquestFriend.isEmpty
                                       ? const Center(
-                                        child:  Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child:  Text('No tienes solicitudes', textAlign: TextAlign.center, style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
-                                        ),
-                                      )
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Text(
+                                              'No tienes solicitudes',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        )
                                       : Column(
                                           children: resquestFriend.map((e) {
-                                          return Container(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            height: 50,
-                                            decoration: const BoxDecoration(
-                                              color: Color(0xFFEEEEEE),
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.15,
-                                                  height: 50,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Color(0xFFEEEEEE),
+                                          return Padding(
+                                            padding: const EdgeInsets.only(top:8.0),
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                color: Color(0xFFEEEEEE),
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  Container(
+                                                    width: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.15,
+                                                    height: 50,
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      color: Color(0xFFEEEEEE),
+                                                    ),
+                                                    child: const Icon(
+                                                      FontAwesomeIcons.userSecret,
+                                                      color: Colors.black,
+                                                      size: 24,
+                                                    ),
                                                   ),
-                                                  child: const Icon(
-                                                    FontAwesomeIcons.userSecret,
-                                                    color: Colors.black,
-                                                    size: 24,
+                                                  Container(
+                                                    width: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.7,
+                                                    height: 50,
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      color: Color(0xFFEEEEEE),
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        Text(
+                                                          e.name,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.7,
-                                                  height: 50,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Color(0xFFEEEEEE),
+                                                  Container(
+                                                    width: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.15,
+                                                    height: 50,
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      color: Color(0xFFEEEEEE),
+                                                    ),
+                                                    child: IconButton(
+                                                      icon:
+                                                          const Icon(Icons.check),
+                                                      color: Colors.green,
+                                                      iconSize: 24,
+                                                      onPressed: () async {
+                                                        print('id contac' +
+                                                            e.contactId
+                                                                .toString());
+                                                        await accpetRequest(
+                                                            e.contactId);
+                                                      },
+                                                    ),
                                                   ),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children:  [
-                                                      Text(
-                                                        e.name,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.15,
-                                                  height: 50,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Color(0xFFEEEEEE),
-                                                  ),
-                                                  child: IconButton(
-                                                    icon: const Icon(Icons.check),
-                                                    color: Colors.green,
-                                                    iconSize: 24,
-                                                    onPressed:() async{
-                                                      print('id contac'+e.contactId.toString());
-                                                      await accpetRequest(e.contactId);
-                                                    },
-                                                  ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           );
                                         }).toList()),
@@ -370,9 +396,9 @@ class _HomeDasState extends State<HomeDas> {
     }
   }
 
-  accpetRequest(int contactId) async{
+  accpetRequest(int contactId) async {
     ResponseStatus res = await ContactApi().accpetRequest(contactId.toString());
-    if(res.status){
+    if (res.status) {
       resquestFriend.removeWhere((element) => element.contactId == contactId);
       setState(() {
         misContact.clear();
@@ -423,75 +449,185 @@ class _HomeDasState extends State<HomeDas> {
   }
 }
 
-class ContactField extends StatelessWidget {
-  final String name;
-  final int idContact, userId;
-  bool statAlert = false;
-  late final BuildContext cont;
-  ContactField(
-      {Key? key,
-      required this.name,
-      required this.idContact,
-      required this.userId,
-      required this.cont})
-      : super(key: key);
+
+class FullScreenDialog extends StatefulWidget {
+  FullScreenDialog({Key? key}) : super(key: key);
 
   @override
+  State<FullScreenDialog> createState() => _FullScreenDialogState();
+}
+
+class _FullScreenDialogState extends State<FullScreenDialog> {
+  var contacts = <Contact>[];
+  bool firsTime = true;
+
+  var controllerSeacr = TextEditingController(text: 'Escriba el nombre...');
+  initState() {
+    super.initState();
+    //contacts = getPublic();
+  }
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 50,
-      decoration: const BoxDecoration(
-        color: Color(0xFFEEEEEE),
+    final _formKey = GlobalKey<FormState>();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 49, 173, 245),
+        title: const Text('Buscador de contactos'),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width * 0.15,
-            height: 50,
-            decoration: const BoxDecoration(
-              color: Color(0xFFEEEEEE),
-            ),
-            child: const Icon(
-              Icons.account_circle_rounded,
-              color: Colors.black,
-              size: 45,
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.7,
-            height: 50,
-            decoration: const BoxDecoration(
-              color: Color(0xFFEEEEEE),
-            ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Form(
+            key: _formKey,
             child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.15,
-            height: 50,
-            decoration: const BoxDecoration(
-              color: Color(0xFFEEEEEE),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.block),
-              color: Colors.red,
-              iconSize: 35,
-              onPressed: () {},
-            ),
-          ),
-        ],
+          children: [
+            Expanded(
+                child: SingleChildScrollView(
+              child: FutureBuilder(
+                  future: getPublicUser(),
+                  builder: (context, snapshot) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TextFormField(
+                          controller: controllerSeacr,
+                          onTap: () {
+                            controllerSeacr.clear();
+                          },
+                          validator: (val){
+                            if(val!.length < 4 ){
+                              return 'Escriba un nombre mas largo';
+                            }
+                          },
+                        ),
+                        IconButton(
+                            onPressed: () async {
+                            if(_formKey.currentState!.validate()){
+                              await getPublic();
+                              setState(() {
+                                 getPublicUser();
+                              });
+                            }
+                            },
+                            icon: const Icon(Icons.search)),
+                        contacts.isEmpty
+                            ? const Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '😅',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              )
+                            : Column(
+                                children: contacts.map((e) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top:8.0),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 50,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFFEEEEEE),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Container(
+                                          width:
+                                              MediaQuery.of(context).size.width *
+                                                  0.15,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xFFEEEEEE),
+                                          ),
+                                          child: const Icon(
+                                            FontAwesomeIcons.userSecret,
+                                            color: Colors.black,
+                                            size: 24,
+                                          ),
+                                        ),
+                                        Container(
+                                          width:
+                                              MediaQuery.of(context).size.width *
+                                                  0.60,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xFFEEEEEE),
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Text(
+                                                e.name,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          width:
+                                              MediaQuery.of(context).size.width *
+                                                  0.15,
+                                          height: 50,
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xFFEEEEEE),
+                                          ),
+                                          child: IconButton(
+                                            icon: const Icon(Icons.check),
+                                            color: Colors.green,
+                                            iconSize: 24,
+                                            onPressed: () async {
+                                              sendRequest(e.userId);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList()),
+                      ],
+                    );
+                  }),
+            )),
+          ],
+        )),
       ),
     );
+  }
+
+  Future<List<Contact>> getPublicUser() async {
+    return contacts;
+  }
+
+  Future<List<Contact>> getPublic() async {
+    contacts.clear();
+    await ContactApi().search(controllerSeacr.text).then((response) {
+      Map<String, dynamic> map = json.decode(response.body);
+      print(map);
+      for (var item in map['data']) {
+        print('Contactos');
+        Contact c = Contact.basicJson(item);
+        contacts.add(c);
+      }
+    });
+    return contacts;
+  }
+
+  sendRequest(int id) async{
+    await ContactApi().sendRequest(id).then((response) {
+      if(response.statusCode == 200){ 
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Se ha enviado la solicitud.')),
+          );
+        Navigator.pop(context);
+      }
+    });
   }
 }

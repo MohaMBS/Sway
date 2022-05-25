@@ -20,9 +20,12 @@ class _HomeDasState extends State<HomeDas> {
   var contacts = <Contact>[];
   var resquestFriend = <Contact>[];
   late bool statAlert = false;
+  //Future<Map<String,int>> countLoan= await countLoans();
+  
+  Map<String, String> countLoan = {'loans':'0'};//{'loans':'0'};
 
   @override
-  void initState() {
+  initState() {
     super.initState();
     //contacts.add(ContactField(name:' c.name,idContact', userId:0,idContact: 0,));
   }
@@ -74,6 +77,23 @@ class _HomeDasState extends State<HomeDas> {
     return resquestFriend;
   }
 
+   countLoans() async {
+    Response response = await ContactApi().countLoans();
+    print(response.body);
+    if(response.statusCode == 200){
+      Map<String, dynamic> map = json.decode(response.body)['data'];
+      print(map['loans']);
+      countLoan['loans']=map['loans'].toString();
+      countLoan['loaneds']=map['loaneds'].toString();
+    }
+    print(countLoan);
+  }
+  
+  getCoutns() async{
+    await countLoans();
+    return countLoan;
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +144,8 @@ class _HomeDasState extends State<HomeDas> {
                                       : Column(
                                           children: contacts.map((e) {
                                             return Padding(
-                                              padding: const EdgeInsets.only(top:8.0),
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0),
                                               child: Container(
                                                 width: MediaQuery.of(context)
                                                     .size
@@ -134,7 +155,8 @@ class _HomeDasState extends State<HomeDas> {
                                                   color: Color(0xFFEEEEEE),
                                                 ),
                                                 child: Row(
-                                                  mainAxisSize: MainAxisSize.max,
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
                                                   children: [
                                                     Container(
                                                       width:
@@ -145,7 +167,8 @@ class _HomeDasState extends State<HomeDas> {
                                                       height: 50,
                                                       decoration:
                                                           const BoxDecoration(
-                                                        color: Color(0xFFEEEEEE),
+                                                        color:
+                                                            Color(0xFFEEEEEE),
                                                       ),
                                                       child: const Icon(
                                                         Icons
@@ -163,7 +186,8 @@ class _HomeDasState extends State<HomeDas> {
                                                       height: 50,
                                                       decoration:
                                                           const BoxDecoration(
-                                                        color: Color(0xFFEEEEEE),
+                                                        color:
+                                                            Color(0xFFEEEEEE),
                                                       ),
                                                       child: Column(
                                                         mainAxisSize:
@@ -174,11 +198,12 @@ class _HomeDasState extends State<HomeDas> {
                                                         children: [
                                                           Text(
                                                             e.name,
-                                                            textAlign:
-                                                                TextAlign.center,
+                                                            textAlign: TextAlign
+                                                                .center,
                                                             style:
                                                                 const TextStyle(
-                                                                    fontSize: 20),
+                                                                    fontSize:
+                                                                        20),
                                                           ),
                                                         ],
                                                       ),
@@ -192,7 +217,8 @@ class _HomeDasState extends State<HomeDas> {
                                                       height: 50,
                                                       decoration:
                                                           const BoxDecoration(
-                                                        color: Color(0xFFEEEEEE),
+                                                        color:
+                                                            Color(0xFFEEEEEE),
                                                       ),
                                                       child: IconButton(
                                                         icon: const Icon(
@@ -289,7 +315,8 @@ class _HomeDasState extends State<HomeDas> {
                                       : Column(
                                           children: resquestFriend.map((e) {
                                           return Padding(
-                                            padding: const EdgeInsets.only(top:8.0),
+                                            padding:
+                                                const EdgeInsets.only(top: 8.0),
                                             child: Container(
                                               width: MediaQuery.of(context)
                                                   .size
@@ -302,26 +329,29 @@ class _HomeDasState extends State<HomeDas> {
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   Container(
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.15,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.15,
                                                     height: 50,
                                                     decoration:
                                                         const BoxDecoration(
                                                       color: Color(0xFFEEEEEE),
                                                     ),
                                                     child: const Icon(
-                                                      FontAwesomeIcons.userSecret,
+                                                      FontAwesomeIcons
+                                                          .userSecret,
                                                       color: Colors.black,
                                                       size: 24,
                                                     ),
                                                   ),
                                                   Container(
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.7,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.7,
                                                     height: 50,
                                                     decoration:
                                                         const BoxDecoration(
@@ -343,18 +373,19 @@ class _HomeDasState extends State<HomeDas> {
                                                     ),
                                                   ),
                                                   Container(
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.15,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.15,
                                                     height: 50,
                                                     decoration:
                                                         const BoxDecoration(
                                                       color: Color(0xFFEEEEEE),
                                                     ),
                                                     child: IconButton(
-                                                      icon:
-                                                          const Icon(Icons.check),
+                                                      icon: const Icon(
+                                                          Icons.check),
                                                       color: Colors.green,
                                                       iconSize: 24,
                                                       onPressed: () async {
@@ -379,6 +410,28 @@ class _HomeDasState extends State<HomeDas> {
                   ],
                 ),
               ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 200,
+                child: 
+                 FutureBuilder(
+                      future: getCoutns(),
+                      builder: (context,snapshot){
+                        return Center(
+                              child: Column(
+                                children:  [
+                                  const Text('Has prestado',style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                                  Text('${countLoan['loans']}',style: const TextStyle(color: Colors.green,fontSize: 35, fontWeight: FontWeight.bold),)
+                                ,
+                                  const Text('Has tomado prestado',style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+                                  Text('${countLoan['loaneds']}',style:const TextStyle(color: Colors.red, fontSize: 35, fontWeight: FontWeight.bold),)
+                                ,const Text('Ve al centro de Prestamos para poder crear nuevos.')
+                                ],
+                              )
+                        );
+                      }
+                ),
+              )
             ],
           ),
         ),
@@ -449,7 +502,6 @@ class _HomeDasState extends State<HomeDas> {
   }
 }
 
-
 class FullScreenDialog extends StatefulWidget {
   FullScreenDialog({Key? key}) : super(key: key);
 
@@ -466,6 +518,7 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
     super.initState();
     //contacts = getPublic();
   }
+
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -479,125 +532,130 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
         child: Form(
             key: _formKey,
             child: Column(
-          children: [
-            Expanded(
-                child: SingleChildScrollView(
-              child: FutureBuilder(
-                  future: getPublicUser(),
-                  builder: (context, snapshot) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        TextFormField(
-                          controller: controllerSeacr,
-                          onTap: () {
-                            controllerSeacr.clear();
-                          },
-                          validator: (val){
-                            if(val!.length < 4 ){
-                              return 'Escriba un nombre mas largo';
-                            }
-                          },
-                        ),
-                        IconButton(
-                            onPressed: () async {
-                            if(_formKey.currentState!.validate()){
-                              await getPublic();
-                              setState(() {
-                                 getPublicUser();
-                              });
-                            }
-                            },
-                            icon: const Icon(Icons.search)),
-                        contacts.isEmpty
-                            ? const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '😅',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              )
-                            : Column(
-                                children: contacts.map((e) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top:8.0),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 50,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFEEEEEE),
+              children: [
+                Expanded(
+                    child: SingleChildScrollView(
+                  child: FutureBuilder(
+                      future: getPublicUser(),
+                      builder: (context, snapshot) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TextFormField(
+                              controller: controllerSeacr,
+                              onTap: () {
+                                controllerSeacr.clear();
+                              },
+                              validator: (val) {
+                                if (val!.length < 4) {
+                                  return 'Escriba un nombre mas largo';
+                                }
+                              },
+                            ),
+                            IconButton(
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    await getPublic();
+                                    setState(() {
+                                      getPublicUser();
+                                    });
+                                  }
+                                },
+                                icon: const Icon(Icons.search)),
+                            contacts.isEmpty
+                                ? const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        '😅',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        Container(
-                                          width:
-                                              MediaQuery.of(context).size.width *
-                                                  0.15,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                            color: Color(0xFFEEEEEE),
-                                          ),
-                                          child: const Icon(
-                                            FontAwesomeIcons.userSecret,
-                                            color: Colors.black,
-                                            size: 24,
-                                          ),
+                                  )
+                                : Column(
+                                    children: contacts.map((e) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 50,
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xFFEEEEEE),
                                         ),
-                                        Container(
-                                          width:
-                                              MediaQuery.of(context).size.width *
-                                                  0.60,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                            color: Color(0xFFEEEEEE),
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text(
-                                                e.name,
-                                                textAlign: TextAlign.center,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.15,
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                color: Color(0xFFEEEEEE),
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          width:
-                                              MediaQuery.of(context).size.width *
+                                              child: const Icon(
+                                                FontAwesomeIcons.userSecret,
+                                                color: Colors.black,
+                                                size: 24,
+                                              ),
+                                            ),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.60,
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                color: Color(0xFFEEEEEE),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.max,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Text(
+                                                    e.name,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
                                                   0.15,
-                                          height: 50,
-                                          decoration: const BoxDecoration(
-                                            color: Color(0xFFEEEEEE),
-                                          ),
-                                          child: IconButton(
-                                            icon: const Icon(Icons.check),
-                                            color: Colors.green,
-                                            iconSize: 24,
-                                            onPressed: () async {
-                                              sendRequest(e.userId);
-                                            },
-                                          ),
+                                              height: 50,
+                                              decoration: const BoxDecoration(
+                                                color: Color(0xFFEEEEEE),
+                                              ),
+                                              child: IconButton(
+                                                icon: const Icon(Icons.check),
+                                                color: Colors.green,
+                                                iconSize: 24,
+                                                onPressed: () async {
+                                                  sendRequest(e.userId);
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList()),
-                      ],
-                    );
-                  }),
+                                      ),
+                                    );
+                                  }).toList()),
+                          ],
+                        );
+                      }),
+                )),
+              ],
             )),
-          ],
-        )),
       ),
     );
   }
@@ -620,12 +678,12 @@ class _FullScreenDialogState extends State<FullScreenDialog> {
     return contacts;
   }
 
-  sendRequest(int id) async{
+  sendRequest(int id) async {
     await ContactApi().sendRequest(id).then((response) {
-      if(response.statusCode == 200){ 
+      if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Se ha enviado la solicitud.')),
-          );
+          const SnackBar(content: Text('Se ha enviado la solicitud.')),
+        );
         Navigator.pop(context);
       }
     });

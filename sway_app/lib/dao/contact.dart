@@ -114,4 +114,22 @@ class ContactApi with ApiInfo{
         return false;
     }
   }
+
+  countLoans() async {
+    print('Api Contact looking counts of loans --> Contactapi.countLoans');
+    var url = Uri.http(ApiInfo.baseUrl,'/api/loans/count',{});
+    print(url);
+    final response = await http.get(url,headers: ApiInfo.headers);
+    try {
+      print(response.body);
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
+        return false;
+    }
+  }
 }

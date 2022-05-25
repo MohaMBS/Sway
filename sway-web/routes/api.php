@@ -57,6 +57,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::delete('loan/',[LoanController::class, 'delete'])->name('passport.deleteLoans');//Borrar un prestamo
     Route::post('loan/',[LoanController::class, 'create'])->name('passport.createLoans');//Crear una prestamos
     Route::put('loan/state',[LoanController::class,'changeStatLoan'])->name('passport.changeStateLaon'); //Para cerrar los prestamos
+    Route::get('loans/count',[UserController::class,'getScores'])->name('passport.countLoans');
 
     //RUTAS DE TESTEO
     Route::get('test',function(Request $request){

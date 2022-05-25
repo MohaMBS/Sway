@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Contact;
+use App\Models\Loan;
+use App\Models\LoanType as LoanT;
+use App\Models\LoanStatus as LoanS;
+use Illuminate\Support\Str;
 use Auth;
 
 class UserController extends BaseController
@@ -125,5 +129,14 @@ class UserController extends BaseController
         $user['phone'] = (auth()->user()->phone) ? auth()->user()->phone : '';
         $user['token'] = $request->bearerToken();
         return $this->sendRespons($user,'Updated');
+    }
+
+    function getScores(Request $request){
+        $condition_done =LoanS::where('description','like','Accepted')->first();
+        $condition_done =LoanS::where('description','like','Accepted')->first();
+        $loans = Loan::where([['user_from_id','=',auth()->user()->id],['loan_status_id','=',$condition_done->id]])->get();
+        $loansCount = $loans->count();
+        $loaneds = Loan::where([['user_to_id','=',auth()->user()->id],['loan_status_id','=',$condition_done->id]])->get();
+        return $this->sendRespons(['loans'=>$loansCount,'loaneds'=>$loaneds->count()],'Here you have');
     }
 }

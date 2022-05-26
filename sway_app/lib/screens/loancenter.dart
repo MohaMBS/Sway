@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'addLoan.dart';
+
 class LoanCenter extends StatefulWidget {
   const LoanCenter({Key? key}) : super(key: key);
 
@@ -19,7 +21,7 @@ class _LoanCenterState extends State<LoanCenter> {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Padding(
-            padding:const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -30,7 +32,8 @@ class _LoanCenterState extends State<LoanCenter> {
                     children: [
                       const Text(
                         'Prestado',
-                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
@@ -59,9 +62,8 @@ class _LoanCenterState extends State<LoanCenter> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       const Text(
-                                        'CondicionCondicionCondicionCondicion...',
-                                        style: TextStyle()
-                                      ),
+                                          'CondicionCondicionCondicionCondicion...',
+                                          style: TextStyle()),
                                       IconButton(
                                         icon: const Icon(
                                           Icons.remove_red_eye_rounded,
@@ -85,11 +87,22 @@ class _LoanCenterState extends State<LoanCenter> {
                           print('Button pressed ...');
                         },
                         icon: TextButton(
-                          onPressed: () {  },
-                          child: Row(
-                            children:const [
-                              Icon(Icons.add),
-                              Text('Añade', style: TextStyle(fontSize: 15),textAlign: TextAlign.end,)
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      const CreateLoan(),
+                                  fullscreenDialog: true,
+                                ));
+                          },
+                          child: Row(children: const [
+                            Icon(Icons.add),
+                            Text(
+                              'Añade',
+                              style: TextStyle(fontSize: 15),
+                              textAlign: TextAlign.end,
+                            )
                           ]),
                         ),
                       ),
@@ -103,12 +116,13 @@ class _LoanCenterState extends State<LoanCenter> {
                     children: [
                       const Text(
                         'Tomado',
-                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.3,
-                        decoration:const BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Color.fromARGB(255, 255, 255, 255),
                         ),
                         child: SingleChildScrollView(
@@ -116,12 +130,12 @@ class _LoanCenterState extends State<LoanCenter> {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Padding(
-                                padding:const EdgeInsetsDirectional.fromSTEB(
+                                padding: const EdgeInsetsDirectional.fromSTEB(
                                     0, 10, 0, 10),
                                 child: Container(
                                   width: MediaQuery.of(context).size.width,
                                   height: 40,
-                                  decoration:const BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: Color(0xFFEEEEEE),
                                   ),
                                   child: Row(
@@ -136,7 +150,7 @@ class _LoanCenterState extends State<LoanCenter> {
                                         style: TextStyle(),
                                       ),
                                       IconButton(
-                                        icon:const Icon(
+                                        icon: const Icon(
                                           Icons.remove_red_eye_rounded,
                                           color: Colors.black,
                                           size: 30,

@@ -20,14 +20,12 @@ class _HomeDasState extends State<HomeDas> {
   var contacts = <Contact>[];
   var resquestFriend = <Contact>[];
   late bool statAlert = false;
-  //Future<Map<String,int>> countLoan= await countLoans();
   
-  Map<String, String> countLoan = {'loans':'0'};//{'loans':'0'};
+  Map<String, String> countLoan = {'loans':'0','loaneds':'0'};//{'loans':'0'};
 
   @override
   initState() {
     super.initState();
-    //contacts.add(ContactField(name:' c.name,idContact', userId:0,idContact: 0,));
   }
 
   getContact() async {
@@ -36,16 +34,9 @@ class _HomeDasState extends State<HomeDas> {
       await ContactApi().getContacts().then((response) {
         Map<String, dynamic> map = json.decode(response.body);
         Map<String, dynamic> data = map["data"];
-        //misContact = data.map((model) => Contact.formJson(model)).toList();
         for (var item in data['connecteds']) {
           print('Contactos');
           Contact c = Contact.formJson(item);
-          /*misContact.add(ContactField(
-            name: c.name,
-            userId: c.userId,
-            idContact: c.contactId,
-            cont: context,
-          ));*/
           contacts.add(c);
         }
       });

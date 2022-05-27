@@ -299,7 +299,7 @@ class _CreateLoanState extends State<CreateLoan> {
                                             const Duration(milliseconds: 2000),
                                             () => setState(() {}),
                                           ),
-                                          validator: (value) => value!.isEmpty || value!.length < 5? 'Debe de escribir una descripción max extensa': null,
+                                          validator: (value) => value!.isEmpty || value.length < 5? 'Debe de escribir una descripción max extensa': null,
                                           autofocus: true,
                                           obscureText: false,
                                           decoration: const InputDecoration(
@@ -386,7 +386,7 @@ class _CreateLoanState extends State<CreateLoan> {
                                             const EdgeInsetsDirectional.fromSTEB(
                                                 0, 5, 0, 5),
                                         child: TextFormField(
-                                          validator: (value) => value!.isEmpty || value!.length < 5? 'Debe de escribir una descripción max extensa': null,
+                                          validator: (value) => value!.isEmpty || value.length < 5? 'Debe de escribir una descripción max extensa': null,
                                           controller: conditonDesc,
                                           onChanged: (_v) => EasyDebounce.debounce(
                                             'descriptionLoanController',

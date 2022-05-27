@@ -1,6 +1,6 @@
-import 'dart:html';
-
+import 'dart:io';
 import 'package:sway_app/api/api.dart';
+import 'package:http/http.dart' as http;
 
 class Loan{
   late String concept;
@@ -19,6 +19,21 @@ class Loan{
 
 class LoanApi with ApiInfo{
 
+
+   getPreparation () async {
+    var url = Uri.http(ApiInfo.baseUrl,'/api/loan/prepare',{});
+    final response = await http.get(url,headers: ApiInfo.headers);
+    try {
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        return 'failed';
+      }
+    } catch (e) {
+      print(e);
+      return 'failed';
+    }
+  }
 
   getLoan(String id){
 

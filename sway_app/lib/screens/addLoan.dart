@@ -1,5 +1,7 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+import 'dart:io';
 
 class CreateLoan extends StatefulWidget {
   const CreateLoan({Key? key}) : super(key: key);
@@ -20,6 +22,7 @@ class _CreateLoanState extends State<CreateLoan> {
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final DateTime now = DateTime.now();
+  late File file;
   var items = [
     'One',
     'Two',
@@ -88,7 +91,7 @@ class _CreateLoanState extends State<CreateLoan> {
                             isExpanded: true,
                             hint: const Text('Seleccione a un contacto...'),
                             value: 'One',
-                            icon: const Icon(Icons.arrow_downward),
+                            icon: const Icon(Icons.list),
                             elevation: 16,
                             style: const TextStyle(
                                 color: Color.fromARGB(255, 0, 0, 0)),
@@ -208,29 +211,32 @@ class _CreateLoanState extends State<CreateLoan> {
                                       textAlign: TextAlign.center,
                                       style: TextStyle()),
                                 ),
-                                DropdownButton<String>(
-                                  value: 'One',
-                                  icon: const Icon(Icons.arrow_downward),
-                                  elevation: 16,
-                                  style:
-                                      const TextStyle(color: Colors.deepPurple),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Colors.deepPurpleAccent,
+                                SizedBox(
+                                  width: 150,
+                                  child: DropdownButton<String>(
+                                    value: 'One',
+                                    icon: const Icon(Icons.list),
+                                    elevation: 16,
+                                    style:
+                                        const TextStyle(color: Colors.deepPurple),
+                                    underline: Container(
+                                      height: 2,
+                                      color: Colors.deepPurpleAccent,
+                                    ),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        typeLoanValue = newValue!;
+                                      });
+                                    },
+                                    items: <String>['One', 'Two', 'Free', 'Four']
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
                                   ),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      typeLoanValue = newValue!;
-                                    });
-                                  },
-                                  items: <String>['One', 'Two', 'Free', 'Four']
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
                                 ),
                               ],
                             ),
@@ -249,29 +255,33 @@ class _CreateLoanState extends State<CreateLoan> {
                                     style: TextStyle(),
                                   ),
                                 ),
-                                DropdownButton<String>(
-                                  value: 'One',
-                                  icon: const Icon(Icons.arrow_downward),
-                                  elevation: 16,
-                                  style:
-                                      const TextStyle(color: Colors.deepPurple),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Colors.deepPurpleAccent,
+                                SizedBox(
+                                  width: 150,
+                                  child: DropdownButton<String>(
+                                    
+                                    value: 'One',
+                                    icon: const Icon(Icons.list),
+                                    elevation: 16,
+                                    style:
+                                        const TextStyle(color: Colors.deepPurple),
+                                    underline: Container(
+                                      height: 2,
+                                      color: Colors.deepPurpleAccent,
+                                    ),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        typeLoanValue = newValue!;
+                                      });
+                                    },
+                                    items: <String>['One', 'Two', 'Free', 'Four']
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
                                   ),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      typeLoanValue = newValue!;
-                                    });
-                                  },
-                                  items: <String>['One', 'Two', 'Free', 'Four']
-                                      .map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
                                 ),
                               ],
                             ),
@@ -329,16 +339,35 @@ class _CreateLoanState extends State<CreateLoan> {
                             children: [
                               const Text(
                                 'Documento',
-                                style: TextStyle(),
+                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                               ),
-                              Container(
+                              SizedBox(
                                 width: 100,
-                                height: 100,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFFFF0000),
-                                ),
+                                height: 50,
+                                child: TextButton(
+                                  onPressed: ()async {  
+                                    var picked = await FilePicker.platform.pickFiles(
+                                      type: FileType.custom,
+                                      allowedExtensions: ['png','jpeg','doc','docx','pdf','txt'],
+                                    );
+                                    if (picked != null) {
+                                      print(picked.files.first.name);
+                                      file = File(picked.files.single.path.toString());
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children:const [
+                                      Text('Subir archivo de prueba.'),
+                                      Icon(Icons.upload)
+                                    ],
+                                  ) ),
                               ),
                             ],
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Text('Los formatos validos son los siguientes: png,jpeg,doc,docx,pdf,txt',style: TextStyle(fontSize: 8),),
                           ),
                           SwitchListTile(
                             value: switchListTileValue = false,
@@ -352,7 +381,7 @@ class _CreateLoanState extends State<CreateLoan> {
                               'Marca esta opcion para hacer un castigo',
                               style: TextStyle(),
                             ),
-                            tileColor: Color(0xFFF5F5F5),
+                            tileColor: const Color(0xFFF5F5F5),
                             dense: false,
                             controlAffinity: ListTileControlAffinity.trailing,
                           ),

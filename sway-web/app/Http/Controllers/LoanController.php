@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation;
 use App\Models\User;
+use App\Models\Contact;
+use App\Models\StatusContact;
 use App\Models\Loan;
 use App\Models\LoanType as LoanT;
 use App\Models\LoanStatus as LoanS;
@@ -114,5 +116,13 @@ class LoanController extends BaseController
         }
 
         return $this->sendRespons('Si','Si');
+    }
+
+    public function getPrepare(){
+        $status = StatusContact::where('description','like','Connected')->first();
+        $loanType = LoanT::all();
+        $conditionType = ConditionType::all();
+        $friends = Contact::where('user_from_id','=',auth()->user()->id)->where('connection_status_id','=',$status->id)->get();
+        return $this->sendRespons(['loan_type'=>$loanType,'condition_type'=>$conditionType,'contacts'=>$friends],'Here you have the info.');
     }
 }

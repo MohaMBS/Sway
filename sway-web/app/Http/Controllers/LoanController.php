@@ -21,7 +21,35 @@ class LoanController extends BaseController
     //
 
     public function index(Request $request){
-        return $this->sendRespons(Loan::find(auth()->user()->id),'All the loans of the user autenticated.');
+        $prestamos = Loan::with('condition')->with('penalty')->where('user_from_id',auth()->user()->id)->with('userTo')->get();
+        $tomado = Loan::with('condition')->with('penalty')->where('user_to_id',auth()->user()->id)->with('userFrom')->get();
+        return $this->sendRespons(['prestado'=>$prestamos, 'tomados'=> $tomado],'All the loans of the user autenticated.');
+    }
+
+    public function getLoan(Request $request){
+        $validated = $request->validate([
+            'id' => 'required',
+        ]);
+        $user = Loan::where('id','=',$request->id)->where('user_from_id','=',auth()->user()->id)->first();
+        if($user){
+            $final = Loan::with('condition')->with('penalty')->where('id','=',$request->id)->with('userFrom')->with('status')->get();
+        }else{
+            $final = Loan::with('condition')->with('penalty')->where('id','=',$request->id)->with('userTo')->with('status')->get();
+        }
+        return $this->sendRespons($final,'here tyou have');
+    }
+
+    public function acceptLoan(Request $request){
+        $validated = $request->validate([
+            'id' => 'required',
+        ]);
+        $status = LoanS::where('description','like','Accepted')->first();
+        $loan = Loan::where('id','=',$request->id)->where('user_from_id','=',auth()->user()->id)->orWhere('user_from_id','=',auth()->user()->id);
+        if($loan->update(['loan_status_id' => $status->id])){
+            return $this->sendRespons('ok','Updated');
+        }else{
+            return $this->sendError('not good.','Error when try to update');
+        }
     }
 
     public function store(Request $request){

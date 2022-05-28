@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:io';
@@ -40,24 +43,31 @@ class LoanApi with ApiInfo{
   }
 
   postLoan(int userId, String concept, String descriprion, int typeLoanId, String limitDate, int conditionConditionTypeId, String conditionDesc, File? file) async{
-    var request = http.MultipartRequest('POST', Uri.http(ApiInfo.baseUrl,'/api/loan/'));
+    var request = http.MultipartRequest('POST', Uri.http(ApiInfo.baseUrl,'/api/loan/',
+    {'user_to_id':userId.toString(),'concept':concept,
+      'description':descriprion,'type_loan_id':typeLoanId.toString(),'limit_date':limitDate,
+      'condition_description':conditionDesc,'condition_condition_type_id':conditionConditionTypeId.toString()}));
+    
+      print(file.toString());
     if(file != null){
       request.files.add(http.MultipartFile(
-      'picture',
-      file.readAsBytes().asStream(),
-      file.lengthSync(),
-      filename: file.path.split("/").last
-    ));
+        'file',
+        file.readAsBytes().asStream(),
+        file.lengthSync(),
+        filename: file.path.split("/").last
+      ));
     }
-      request.fields.addAll({'user_to_id':userId.toString(),'concept':concept,
-      'description':descriprion,'type_loan_id':typeLoanId.toString(),'limit_date':limitDate,
-      'condition_description':conditionDesc,'condition_condition_type_id':conditionConditionTypeId.toString()});
+      //request.fields.addAll();
     
     //var url = Uri.http(ApiInfo.baseUrl,'/api/loan',{'user_to_id':''});
     //final response = await http.post(url,headers: ApiInfo.headers);
     request.headers.addAll(ApiInfo.headers);
     request.send().then((response) {
-      print(response.statusCode);
+      if(response.statusCode == 200){
+        
+      }else{
+
+      }
     });
   }
 

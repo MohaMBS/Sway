@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Contact;
 use App\Models\StatusContact;
 use App\Models\Loan;
+use App\Models\Penalty;
 use App\Models\LoanType as LoanT;
 use App\Models\LoanStatus as LoanS;
 use App\Models\Condition;
@@ -43,8 +44,7 @@ class LoanController extends BaseController
             'type_loan_id' => 'required',
             'limit_date' => 'required|date',
             'condition_description' => 'required',
-            'condition_condition_type_id' => 'required',
-            'document_base64' => 'nullable|string|min:1',
+            'condition_condition_type_id' => 'required'
         ]);
         try {
             $src_document = $this->decodeDocumentSave($request);
@@ -55,6 +55,14 @@ class LoanController extends BaseController
                     'description'=>$request->condition_description,
                     'condition_type_id'=>$conditionType->id
                 ]);
+                $id_penal=null;
+                if($request->has('penalty')){
+                    $pennal = Penalty::create([
+                        'description'=>$request->penalty,
+                        'penalty_type_id'=>0]
+                    );
+                    $id_penal = $pennal->id;
+                }
                 $newLoan = Loan::create([
                     'user_from_id'=> auth()->user()->id,
                     'user_to_id' => User::find($request->user_to_id)->id,
@@ -64,7 +72,8 @@ class LoanController extends BaseController
                     'type_loan_id'=>LoanT::find($request->type_loan_id)->id,
                     'limit_date' => $request->limit_date,
                     'loan_status_id' => LoanS::where('description','like','Waiting confirmation')->first()->id,
-                    'document_src'=> $src_document
+                    'document_src'=> $src_document,
+                    'penalty_id'=>$id_penal
                 ]);
                 $status = LoanS::find($newLoan->loan_status_id);
                 $user_id = auth()->user()->id;
@@ -122,7 +131,8 @@ class LoanController extends BaseController
         $status = StatusContact::where('description','like','Connected')->first();
         $loanType = LoanT::all();
         $conditionType = ConditionType::all();
-        $friends = Contact::where('user_from_id','=',auth()->user()->id)->where('connection_status_id','=',$status->id)->get();
-        return $this->sendRespons(['loan_type'=>$loanType,'condition_type'=>$conditionType,'contacts'=>$friends],'Here you have the info.');
+        $friends = Contact::where('user_from_id','=',auth()->user()->id)->where('connection_status_id','=',$status->id)->pluck('user_to_id')->toArray();
+        $users = User::whereIn('id',$friends)->get();
+        return $this->sendRespons(['loan_type'=>$loanType,'condition_type'=>$conditionType,'contacts'=>$users],'Here you have the info.');
     }
 }

@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:sway_app/auth/auth.dart';
 import 'dart:convert';
 
 import '../api/api.dart';
@@ -42,7 +44,8 @@ class LoanApi with ApiInfo{
     }
   }
 
-  postLoan(int userId, String concept, String descriprion, int typeLoanId, String limitDate, int conditionConditionTypeId, String conditionDesc, File? file) async{
+  Future<ResponseStatus> postLoan(int userId, String concept, String descriprion, int typeLoanId, String limitDate, int conditionConditionTypeId, String conditionDesc, File? file) async{
+    ResponseStatus stat = ResponseStatus('Error',false);
     var request = http.MultipartRequest('POST', Uri.http(ApiInfo.baseUrl,'/api/loan/',
     {'user_to_id':userId.toString(),'concept':concept,
       'description':descriprion,'type_loan_id':typeLoanId.toString(),'limit_date':limitDate,
@@ -62,13 +65,11 @@ class LoanApi with ApiInfo{
     //var url = Uri.http(ApiInfo.baseUrl,'/api/loan',{'user_to_id':''});
     //final response = await http.post(url,headers: ApiInfo.headers);
     request.headers.addAll(ApiInfo.headers);
-    request.send().then((response) {
-      if(response.statusCode == 200){
-        
-      }else{
-
-      }
-    });
+    var res  = await request.send();
+    if(res.statusCode == 200){
+      stat.status = true;
+    }
+    return stat;
   }
 
   getLoan(){

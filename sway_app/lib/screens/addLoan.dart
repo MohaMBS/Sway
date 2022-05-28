@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:http/http.dart';
+import 'package:sway_app/auth/auth.dart';
 import 'dart:io';
 
 import 'package:sway_app/dao/loan.dart';
@@ -576,8 +577,19 @@ class _CreateLoanState extends State<CreateLoan> {
                                           onPressed: () async {
                                             print(formKey.currentState!.validate());
                                             if (formKey.currentState!.validate()) {
-                                              await LoanApi().postLoan(userId,inputConceptController.text.toString(),descriptionLoanController.text.toString(),
+                                              ResponseStatus res = await LoanApi().postLoan(userId,inputConceptController.text.toString(),descriptionLoanController.text.toString(),
                                               loanTypeValue,limitDateLoanController.text.toString(),conditionTypeValue,conditonDesc.text.toString(),file);
+                                              print(res.status);
+                                              if(res.status){
+                                                Navigator.of(context).pop();
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  const SnackBar(content: Text('Creado, solo hace falta esperar a que acpete.')),
+                                                );
+                                              }else{
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  const SnackBar(content: Text('Fallo al intentar crear el prestamo 😅, intentelo mas tarde.')),
+                                                );
+                                              }
                                             }
                                             print('IconButton pressed ...');
                                           },

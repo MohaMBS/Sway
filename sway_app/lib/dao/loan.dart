@@ -12,19 +12,47 @@ import 'dart:convert';
 import '../api/api.dart';
 
 class Loan{
+  late String id;
   late String concept;
   late String description;
-  late File document; 
+  late String document; 
   late String userToId;
   late String conditionId;
   late String typeLoanId;
   late String penaltyId;
   late String limitDate;
+  late String penalty;
+  late String codition;
 
   Loan(this.concept,this.description,this.document,this.userToId,this.conditionId,this.typeLoanId,this.penaltyId,this.limitDate);
   Loan.e();
+  
 }
 
+class LoanW{
+  late String id;
+  late String concepto;
+  late String fechaLimite;
+  late String descripcion;
+  late String descripcionCondicion;
+  late String documento;
+  late String castigo='';
+
+  LoanW(this.id,this.concepto,this.fechaLimite,this.descripcion,this.descripcionCondicion,this.documento,this.castigo);
+
+  LoanW.formJson(Map json){
+    print(json);
+    var c = json['condition'];
+    var p = json['penalty'];
+    id = json['id'].toString();
+    concepto= json['concept'].toString();
+    fechaLimite = json['limit_date'].toString();
+    descripcion = json['description'].toString();
+    descripcionCondicion = c['description'].toString();
+    documento = json['document_src'].toString();
+    castigo = p == null ? '':p['description'].toString();
+  }
+}
 
 class LoanApi with ApiInfo{
 
@@ -72,7 +100,17 @@ class LoanApi with ApiInfo{
     return stat;
   }
 
-  getLoan(){
+  Future<http.Response>  getLoanAll() async {
+    var url = Uri.http(ApiInfo.baseUrl,'/api/loan',{});
+    final response = await http.get(url,headers: ApiInfo.headers);
+    print(response.body);
+    return response;
+  }
 
+  Future<http.Response> getLoan(String id) async {
+    var url = Uri.http(ApiInfo.baseUrl,'/api/loan/index',{'id':id});
+    final response = await http.get(url,headers: ApiInfo.headers);
+    print(response.body);
+    return response;
   }
 }

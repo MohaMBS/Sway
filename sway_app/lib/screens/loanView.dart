@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_file/open_file.dart';
 import 'package:sway_app/api/api.dart';
@@ -22,6 +23,9 @@ class LaonV extends StatefulWidget {
 class _LaonVState extends State<LaonV> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late LoanW l;
+  String name = '';
+  bool status = false;
+  bool statAlert = false;
   var _openResult = 'Unknown';
 
   getLoan() async {
@@ -30,6 +34,15 @@ class _LaonVState extends State<LaonV> {
       Map<String, dynamic> map = json.decode(response.body);
 
       l = LoanW.formJson(map['data'][0]);
+      //print(map['data'][0]['user_from']['name']);
+      if (map['data'][0]['user_from'] != null) {
+        name = 'Prestado ara ' + map['data'][0]['user_from']['name'];
+      } else {
+        name = 'Tomado de ' + map['data'][0]['user_to']?['name'];
+      }
+      if (map['data'][0]['status']['description'] != 'Accepted') {
+        status = true;
+      }
       return l;
     }
 
@@ -37,14 +50,55 @@ class _LaonVState extends State<LaonV> {
   }
 
   Future<void> openFile(String src) async {
-    String? filePath = r''+src;
-    
+    String? filePath = r'' + src;
+
     final _result = await OpenFile.open(filePath);
     print(_result.message);
 
     setState(() {
       _openResult = "type=${_result.type}  message=${_result.message}";
     });
+  }
+
+  Future<void> showMyDialog() async {
+    statAlert = false;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Deseas aceptar el prestamo'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children:const <Widget>[
+                Text('Seguro de que quieres aceptar el prestamo'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+                statAlert = true;
+              },
+              style: TextButton.styleFrom(primary: Colors.red),
+              icon: const Icon(FontAwesomeIcons.check),
+              label: const Text(
+                'Continuar',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                statAlert = false;
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -118,6 +172,7 @@ class _LaonVState extends State<LaonV> {
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold),
                                       ),
+                                      Text(name)
                                     ],
                                   ),
                                 ),
@@ -262,13 +317,11 @@ class _LaonVState extends State<LaonV> {
                                     ),
                                   ),
                                 ),
-                                l.documento == '' || l.documento == 'null'
-                                    ? const Text(
-                                        'No contiene ningun documento.',
-                                        textAlign: TextAlign.center,
-                                      )
-                                    : ElevatedButton.icon(
-                                        onPressed: () async {
+                                ElevatedButton.icon(
+                                  onPressed: l.documento == '' ||
+                                          l.documento == 'null'
+                                      ? null
+                                      : () async {
                                           Map<Permission, PermissionStatus>
                                               statuses = await [
                                             Permission.storage,
@@ -276,28 +329,35 @@ class _LaonVState extends State<LaonV> {
                                           ].request();
                                           if (statuses[Permission.storage]!
                                               .isGranted) {
-                                            var dir = await DownloadsPathProvider.downloadsDirectory;
+                                            var dir =
+                                                await DownloadsPathProvider
+                                                    .downloadsDirectory;
                                             if (dir != null) {
-                                              String savename = l.documento.split('/').last;
-                                              String savePath = dir.path + "/$savename";
+                                              String savename =
+                                                  l.documento.split('/').last;
+                                              String savePath =
+                                                  dir.path + "/$savename";
                                               print(savePath);
                                               try {
-                                                await Dio().download(Uri.http(ApiInfo.baseUrl,l.documento).toString(),
-                                                  savePath, 
-                                                  onReceiveProgress:(received, total) {
-                                                    if (total != -1) {
-                                                      print((received /
-                                                                  total *
-                                                                  100)
-                                                              .toStringAsFixed(
-                                                                  0) +
-                                                          "%");
-                                                      //you can build progressbar feature too
-                                                    }
+                                                await Dio().download(
+                                                    Uri.http(ApiInfo.baseUrl,
+                                                            l.documento)
+                                                        .toString(),
+                                                    savePath, onReceiveProgress:
+                                                        (received, total) {
+                                                  if (total != -1) {
+                                                    print((received /
+                                                                total *
+                                                                100)
+                                                            .toStringAsFixed(
+                                                                0) +
+                                                        "%");
+                                                    //you can build progressbar feature too
+                                                  }
                                                 });
                                                 print(
                                                     "File is saved to download folder.");
-                                                    openFile(savePath);
+                                                openFile(savePath);
                                               } on DioError catch (e) {
                                                 print(e.message);
                                               }
@@ -307,14 +367,56 @@ class _LaonVState extends State<LaonV> {
                                                 "No permission to read and write.");
                                           }
                                         },
+                                  icon: const Icon(
+                                    // <-- Icon
+                                    Icons.download,
+                                    size: 24.0,
+                                  ),
+                                  label: const Text(
+                                      'Descargar documento'), // <-- Text
+                                ),
+                                status
+                                    ? ElevatedButton.icon(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.orange)),
                                         icon: const Icon(
                                           // <-- Icon
-                                          Icons.download,
+                                          Icons.check,
                                           size: 24.0,
                                         ),
-                                        label: const Text(
-                                            'Descargar documento'), // <-- Text
-                                      ),
+                                        label: const Text('Aceptar prestamo'),
+                                        onPressed: () async {
+                                          await showMyDialog();
+                                          if(statAlert){
+                                            http.Response response =  await LoanApi().aceptLaon(l.id);
+                                            if(response.statusCode == 200){
+                                              Navigator.of(context).pop();
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(content: Text('Se ha confirmado.')),
+                                              );
+                                            }else{
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(content: Text('No has aceptado el prestamo.')),
+                                              );
+                                            }
+                                          }
+                                        },
+                                      )
+                                    : ElevatedButton.icon(
+                                        style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.orange)),
+                                        icon: const Icon(
+                                          // <-- Icon
+                                          Icons.check,
+                                          size: 24.0,
+                                        ),
+                                        label: const Text('Aceptar prestamo'),
+                                        onPressed: null,
+                                      )
                               ],
                             ),
                           ),

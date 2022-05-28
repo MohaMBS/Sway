@@ -113,4 +113,11 @@ class LoanApi with ApiInfo{
     print(response.body);
     return response;
   }
+
+  Future<http.Response> aceptLaon(String id) async{
+    var url = Uri.http(ApiInfo.baseUrl,'/api/loan/status',{'id':id});
+    final response = await http.put(url,headers: ApiInfo.headers);
+    print(response.body);
+    return response;
+  }
 }

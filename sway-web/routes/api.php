@@ -53,6 +53,7 @@ Route::group(['middleware' => 'auth:api'], function() {
 
     // RUTAS PARA GESTIONAR LOS PRESTAMOS
     Route::get('loan/',[LoanController::class, 'index'])->name('passport.indexLoans');//Obtener todos los prestamos del usuario;
+    Route::get('loan/index',[LoanController::class, 'getLoan'])->name('passport.getLoan');//Obtener un prestamo;
     Route::put('loan/',[LoanController::class, 'store'])->name('passport.sotreLoans'); //Actulizar una prestamos, en caso de ser necesario;
     Route::delete('loan/',[LoanController::class, 'delete'])->name('passport.deleteLoans');//Borrar un prestamo
     Route::post('loan/',[LoanController::class, 'create'])->name('passport.createLoans');//Crear una prestamos

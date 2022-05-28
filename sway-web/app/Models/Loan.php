@@ -12,6 +12,17 @@ class Loan extends Model
     protected $fillable = ['user_from_id','loan_status_id','user_to_id','condition_id','concept','description','type_loan_id','limit_date','document_src','penalty_id'];
 
     public function user(){
-        $this->belongsTo(User::class,'user_from_id', 'id');
+        return  $this->belongsTo(User::class,'user_from_id', 'id');
+    }
+    public function userTo(){
+        return  $this->belongsTo(User::class,'user_to_id', 'id');
+    }
+
+    public function condition(){
+       return $this->hasOne(Condition::class,'id','condition_id');
+    }
+    
+    public function penalty(){
+       return $this->hasOne(Penalty::class,'id','penalty_id');
     }
 }

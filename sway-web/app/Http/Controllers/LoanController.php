@@ -21,7 +21,17 @@ class LoanController extends BaseController
     //
 
     public function index(Request $request){
-        return $this->sendRespons(Loan::find(auth()->user()->id),'All the loans of the user autenticated.');
+        $prestamos = Loan::with('condition')->with('penalty')->where('user_from_id',auth()->user()->id)->get();
+        $tomado = Loan::with('condition')->with('penalty')->where('user_to_id',auth()->user()->id)->get();
+        return $this->sendRespons(['prestado'=>$prestamos, 'tomados'=> $tomado],'All the loans of the user autenticated.');
+    }
+
+    public function getLoan(Request $request){
+        $validated = $request->validate([
+            'id' => 'required',
+        ]);
+        
+        return $this->sendRespons(Loan::with('condition')->with('penalty')->where('id','=',$request->id)->get(),'here tyou have');
     }
 
     public function store(Request $request){

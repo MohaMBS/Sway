@@ -21,8 +21,8 @@ class LoanController extends BaseController
     //
 
     public function index(Request $request){
-        $prestamos = Loan::with('condition')->with('penalty')->where('user_from_id',auth()->user()->id)->get();
-        $tomado = Loan::with('condition')->with('penalty')->where('user_to_id',auth()->user()->id)->get();
+        $prestamos = Loan::with('condition')->with('penalty')->where('user_from_id',auth()->user()->id)->with('userTo')->get();
+        $tomado = Loan::with('condition')->with('penalty')->where('user_to_id',auth()->user()->id)->with('userFrom')->get();
         return $this->sendRespons(['prestado'=>$prestamos, 'tomados'=> $tomado],'All the loans of the user autenticated.');
     }
 
@@ -30,8 +30,26 @@ class LoanController extends BaseController
         $validated = $request->validate([
             'id' => 'required',
         ]);
-        
-        return $this->sendRespons(Loan::with('condition')->with('penalty')->where('id','=',$request->id)->get(),'here tyou have');
+        $user = Loan::where('id','=',$request->id)->where('user_from_id','=',auth()->user()->id)->first();
+        if($user){
+            $final = Loan::with('condition')->with('penalty')->where('id','=',$request->id)->with('userFrom')->with('status')->get();
+        }else{
+            $final = Loan::with('condition')->with('penalty')->where('id','=',$request->id)->with('userTo')->with('status')->get();
+        }
+        return $this->sendRespons($final,'here tyou have');
+    }
+
+    public function acceptLoan(Request $request){
+        $validated = $request->validate([
+            'id' => 'required',
+        ]);
+        $status = LoanS::where('description','like','Accepted')->first();
+        $loan = Loan::where('id','=',$request->id)->where('user_from_id','=',auth()->user()->id)->orWhere('user_from_id','=',auth()->user()->id);
+        if($loan->update(['loan_status_id' => $status->id])){
+            return $this->sendRespons('ok','Updated');
+        }else{
+            return $this->sendError('not good.','Error when try to update');
+        }
     }
 
     public function store(Request $request){

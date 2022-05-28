@@ -14,8 +14,15 @@ class Loan extends Model
     public function user(){
         return  $this->belongsTo(User::class,'user_from_id', 'id');
     }
+    public function userFrom(){
+        return  $this->hasOne(User::class, 'id','user_from_id');
+    }
     public function userTo(){
-        return  $this->belongsTo(User::class,'user_to_id', 'id');
+        return  $this->hasOne(User::class, 'id','user_to_id');
+    }
+
+    public function status(){
+        return $this->hasOne(LoanStatus::class,'id','loan_status_id');
     }
 
     public function condition(){

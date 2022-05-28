@@ -21,7 +21,7 @@ class _CreateLoanState extends State<CreateLoan> {
   late int userId=0;
   late int typeLoanValue;
   late bool switchListTileValue = false;
-  late String conditonDescValue;
+  late String conditonDescValue='';
 
   late TextEditingController penaltyDescrController;
   late TextEditingController descriptionLoanController;
@@ -574,11 +574,11 @@ class _CreateLoanState extends State<CreateLoan> {
                                             size: 30,
                                           ),
                                           onPressed: () async {
+                                            print(formKey.currentState!.validate());
                                             if (formKey.currentState!.validate()) {
-
+                                              LoanApi().postLoan(userId,inputConceptController.text.toString(),descriptionLoanController.text.toString(),
+                                              loanTypeValue,limitDateLoanController.text.toString(),conditionTypeValue,conditonDesc.text.toString(),file);
                                             }
-                                            await getPrepare();
-                                            print(contacts);
                                             print('IconButton pressed ...');
                                           },
                                         ),

@@ -7,7 +7,7 @@ import 'package:sway_app/auth/userAuth.dart';
 
 import 'package:validators/validators.dart';
 
-class Login extends StatefulWidget  {
+class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
   @override
@@ -15,7 +15,6 @@ class Login extends StatefulWidget  {
 }
 
 class LoginState extends State<Login> with Auth {
-
   final _formKey = GlobalKey<FormState>();
 
   late String _email;
@@ -66,7 +65,7 @@ class LoginState extends State<Login> with Auth {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Escriba un email...';
-                        }else if(!isEmail(value.trim())){
+                        } else if (!isEmail(value.trim())) {
                           return 'Introduzca un email valido...';
                         }
                         _email = value.trim();
@@ -94,7 +93,7 @@ class LoginState extends State<Login> with Auth {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: TextFormField(
-                       validator: (value) {
+                      validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Escriba una contraseña...';
                         }
@@ -117,31 +116,41 @@ class LoginState extends State<Login> with Auth {
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Container(
                   padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.teal[200]),
+                  //decoration: BoxDecoration(
+                  //  borderRadius: BorderRadius.circular(12),
+                  //  color: Colors.teal[200]),
                   child: Center(
                       child: ElevatedButton(
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        Future<ResponseStatus> status = Auth().login(_email, _password);
-                        status.then((status){
-                          if(status.status){
+                        Future<ResponseStatus> status =
+                            Auth().login(_email, _password);
+                        status.then((status) {
+                          if (status.status) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Session iniciada 😀')),
+                              const SnackBar(
+                                  content: Text('Session iniciada 😀')),
                             );
-                            Navigator.pushNamed(context,'/dashboard');
-                          }else{
+                            Navigator.pushNamed(context, '/dashboard');
+                          } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Credenciales erroenas 😅')),
+                              const SnackBar(
+                                  content: Text('Credenciales erroenas 😅')),
                             );
                           }
-                        } 
-                        );
+                        });
                       }
                     },
-                    child: const Text('Submit'),
+                    child: const SizedBox(
+                        width: 250,
+                        height: 50,
+                        child: Center(
+                            child: Text(
+                          'Iniciar session',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ))),
                   )),
                 ),
               ),

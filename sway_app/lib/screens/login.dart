@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sway_app/api/api.dart';
 import 'package:sway_app/auth/auth.dart';
 import 'package:sway_app/auth/userAuth.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:validators/validators.dart';
 
@@ -148,7 +150,8 @@ class LoginState extends State<Login> with Auth {
                         child: Center(
                             child: Text(
                           'Iniciar session',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ))),
                   )),
@@ -164,11 +167,17 @@ class LoginState extends State<Login> with Auth {
                 children: [
                   const Text('¿No estas registrado?',
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text(
-                    ' Registrate',
-                    style: TextStyle(
-                        color: Colors.blue[700], fontWeight: FontWeight.bold),
-                  )
+                  TextButton(
+                    onPressed: () async {
+                      await launchUrl(
+                          Uri.http(ApiInfo.baseUrl,'/register'));
+                    },
+                    child: Text(
+                      ' Registrate',
+                      style: TextStyle(
+                          color: Colors.blue[700], fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ],
               )
             ]),

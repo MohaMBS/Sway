@@ -9,11 +9,18 @@ class Contact{
   late String name,date;
   Contact(this.userId,this.contactId,this.name,this.date);
   Contact.formJson(Map json){
-    List<dynamic> f = json['friend_info'];
+    if(json['friend_info'] != null){
+      List<dynamic> f = json['friend_info'];
+      name = f[0]['name'];
+      date = f[0]['created_at'];
+    }else{
+      List<dynamic> f = json['friend_info2'];
+      name = f[0]['name'];
+      date = f[0]['created_at'];
+    }
+    
     contactId = json['id'];
     userId= json['user_to_id'];
-    name = f[0]['name'];
-    date = f[0]['created_at'];
   }
   Contact.basicJson(Map json){
     //List<dynamic> f = json['friend_info'];

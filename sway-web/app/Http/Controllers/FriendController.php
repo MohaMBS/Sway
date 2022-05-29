@@ -62,7 +62,7 @@ class FriendController extends BaseController
         $contactWaiting = Contact::where('connection_status_id','=',$statusWaiting->id)->with('friendInfo')->where('user_to_id','=',auth()->user()->id)->get();
         */
         $contactsConnecteds = Contact::where('user_from_id','=',auth()->user()->id)->where('connection_status_id','=',$statusConnected->id)->with('friendInfo')->get();
-        $contactWaiting = Contact::where('user_to_id','=',auth()->user()->id)->where('connection_status_id','=',$statusWaiting->id)->with('friendInfo')->get();
+        $contactWaiting = Contact::where('user_to_id','=',auth()->user()->id)->where('connection_status_id','=',$statusWaiting->id)->with('friendInfo2')->get();
         $data = ['connecteds'=>$contactsConnecteds,'waitng_connection'=>$contactWaiting];
         
         return $this->sendRespons($data,'Your connections');

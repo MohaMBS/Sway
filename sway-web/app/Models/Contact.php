@@ -30,4 +30,7 @@ class Contact extends Model
     public function friendInfo(){
         return $this->hasMany(User::class,'id','user_to_id');
     }
+    public function friendInfo2(){
+        return $this->hasMany(User::class,'id','user_from_id');
+    }
 }

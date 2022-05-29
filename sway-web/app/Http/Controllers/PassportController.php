@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Company;
 use Laravel\Passport\TokenRepository;
+use Redirect;
 
 class PassportController extends BaseController
 {
@@ -18,10 +19,10 @@ class PassportController extends BaseController
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'name'=>'required',
+            'name'=>'required|min:5',
             'email'=>'required|email|unique:users,email',
-            'password'=>'required',
-            'confirm_password'=>'required|same:password'
+            'password'=>'required|min:5',
+            'confirm_password'=>'required|min:5|same:password'
         ]);
         
         if($request->has('for_company')){
@@ -45,11 +46,12 @@ class PassportController extends BaseController
         }
 
         if ($validator->fails()) {  
+            //return Redirect::back()->withErrors($validator->errors());
             // return "Error";
             return $this->sendError(
                     'Error de validacion',
                     $validator->errors(),
-                    422);
+                    300);
         }
         $input = $request->all();
         //ciframos el password

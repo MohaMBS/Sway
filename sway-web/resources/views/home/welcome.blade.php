@@ -1,63 +1,95 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
 
-        <title>Laravel</title>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Tailwind Starter Template - App Landing Page Template: Tailwind Toolbox</title>
+	<meta name="description" content="">
+	<meta name="keywords" content="">
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+	<!-- Font Awesome if you need it
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+	-->
 
-        <!-- Styles -->
-        <style>
-            /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}a{background-color:transparent}[hidden]{display:none}html{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;line-height:1.5}*,:after,:before{box-sizing:border-box;border:0 solid #e2e8f0}a{color:inherit;text-decoration:inherit}svg,video{display:block;vertical-align:middle}video{max-width:100%;height:auto}.bg-white{--bg-opacity:1;background-color:#fff;background-color:rgba(255,255,255,var(--bg-opacity))}.bg-gray-100{--bg-opacity:1;background-color:#f7fafc;background-color:rgba(247,250,252,var(--bg-opacity))}.border-gray-200{--border-opacity:1;border-color:#edf2f7;border-color:rgba(237,242,247,var(--border-opacity))}.border-t{border-top-width:1px}.flex{display:flex}.grid{display:grid}.hidden{display:none}.items-center{align-items:center}.justify-center{justify-content:center}.font-semibold{font-weight:600}.h-5{height:1.25rem}.h-8{height:2rem}.h-16{height:4rem}.text-sm{font-size:.875rem}.text-lg{font-size:1.125rem}.leading-7{line-height:1.75rem}.mx-auto{margin-left:auto;margin-right:auto}.ml-1{margin-left:.25rem}.mt-2{margin-top:.5rem}.mr-2{margin-right:.5rem}.ml-2{margin-left:.5rem}.mt-4{margin-top:1rem}.ml-4{margin-left:1rem}.mt-8{margin-top:2rem}.ml-12{margin-left:3rem}.-mt-px{margin-top:-1px}.max-w-6xl{max-width:72rem}.min-h-screen{min-height:100vh}.overflow-hidden{overflow:hidden}.p-6{padding:1.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.pt-8{padding-top:2rem}.fixed{position:fixed}.relative{position:relative}.top-0{top:0}.right-0{right:0}.shadow{box-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px 0 rgba(0,0,0,.06)}.text-center{text-align:center}.text-gray-200{--text-opacity:1;color:#edf2f7;color:rgba(237,242,247,var(--text-opacity))}.text-gray-300{--text-opacity:1;color:#e2e8f0;color:rgba(226,232,240,var(--text-opacity))}.text-gray-400{--text-opacity:1;color:#cbd5e0;color:rgba(203,213,224,var(--text-opacity))}.text-gray-500{--text-opacity:1;color:#a0aec0;color:rgba(160,174,192,var(--text-opacity))}.text-gray-600{--text-opacity:1;color:#718096;color:rgba(113,128,150,var(--text-opacity))}.text-gray-700{--text-opacity:1;color:#4a5568;color:rgba(74,85,104,var(--text-opacity))}.text-gray-900{--text-opacity:1;color:#1a202c;color:rgba(26,32,44,var(--text-opacity))}.underline{text-decoration:underline}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.w-5{width:1.25rem}.w-8{width:2rem}.w-auto{width:auto}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}@media (min-width:640px){.sm\:rounded-lg{border-radius:.5rem}.sm\:block{display:block}.sm\:items-center{align-items:center}.sm\:justify-start{justify-content:flex-start}.sm\:justify-between{justify-content:space-between}.sm\:h-20{height:5rem}.sm\:ml-0{margin-left:0}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:pt-0{padding-top:0}.sm\:text-left{text-align:left}.sm\:text-right{text-align:right}}@media (min-width:768px){.md\:border-t-0{border-top-width:0}.md\:border-l{border-left-width:1px}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (min-width:1024px){.lg\:px-8{padding-left:2rem;padding-right:2rem}}@media (prefers-color-scheme:dark){.dark\:bg-gray-800{--bg-opacity:1;background-color:#2d3748;background-color:rgba(45,55,72,var(--bg-opacity))}.dark\:bg-gray-900{--bg-opacity:1;background-color:#1a202c;background-color:rgba(26,32,44,var(--bg-opacity))}.dark\:border-gray-700{--border-opacity:1;border-color:#4a5568;border-color:rgba(74,85,104,var(--border-opacity))}.dark\:text-white{--text-opacity:1;color:#fff;color:rgba(255,255,255,var(--text-opacity))}.dark\:text-gray-400{--text-opacity:1;color:#cbd5e0;color:rgba(203,213,224,var(--text-opacity))}}
-        </style>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!--Replace with your tailwind.css once created-->
 
-        <style>
-            body {
-                font-family: 'Nunito';
-                background-color: #042f41
-            }
-            .typewriter {
-                color: white;
-                font-size: 4rem;
-                overflow: hidden; /* Ensures the content is not revealed until the animation */
-                border-right: .15em solid rgb(255, 255, 255); /* The typwriter cursor */
-                white-space: nowrap; /* Keeps the content on a single line */
-                margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-                letter-spacing: .15em; /* Adjust as needed */
-                animation: 
-                    typing 3.5s steps(40, end),
-                    blink-caret .75s step-end infinite;
-                }
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="{{ URL::asset('css/css.css'); }} ">
 
-                /* The typing effect */
-                @keyframes  typing {
-                from { width: 0 }
-                to { width: 100% }
-                }
+</head>
 
-                /* The typewriter cursor effect */
-                @keyframes  blink-caret {
-                from, to { border-color: transparent }
-                50% { border-color: rgb(255, 255, 255); }
-            }
-        </style>
-    </head>
-    <body class="antialiased">
-        <div class="relative flex items-top justify-center min-h-screen sm:items-center sm:pt-0">    
-            <div class="relative flex items-top justify-center min-h-screen sm:items-center sm:pt-0">
-            
-                <div class="max-w-6xl mx-auto sm:px-6 lg:px-8"> 
-                    <div>
-                        <h1 class="typewriter">Trabajando en la aplicación.</h1>
-                    </div>
-                    <div class="flex justify-center">
-                        <img src="https://c.tenor.com/2uyENRmiUt0AAAAC/coding.gif" alt="" srcset="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
+
+<body class="leading-normal tracking-normal text-gray-900" style="font-family: 'Source Sans Pro', sans-serif;">
+
+
+
+	<div class="h-screen pb-14 bg-right bg-cover bg-black" style="background-image:url('https://mir-s3-cdn-cf.behance.net/project_modules/fs/f1d0d572816947.5c2bcd89d519b.gif');">
+		<!--Nav-->
+		<div class="w-full container mx-auto p-6">
+
+			<div class="w-full flex items-center justify-between">
+				<a class="flex items-center text-teal-500 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
+					href="#">
+					<img class="w-1/5" src="{{ URL::asset('img/web/logo/Logo.png'); }}" alt=""> Sway
+				</a>
+
+				<div class="flex w-1/2 justify-end content-center">
+					<a class="inline-block text-blue-300 no-underline hover:text-indigo-800 hover:text-underline text-center h-10 p-2 md:h-auto md:p-4"
+						data-tippy-content="@twitter_handle" href="https://github.com/MohaMBS/Sway">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+							<path
+								d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+						</svg>
+					</a>
+				</div>
+
+			</div>
+
+		</div>
+
+		<!--Main-->
+		<div class="container pt-24 md:pt-48 px-6 mx-auto flex flex-wrap flex-col md:flex-row items-center">
+
+			<!--Left Col-->
+			<div class="flex flex-col w-full xl:w-2/5 justify-center lg:items-start overflow-y-hidden">
+				<h1
+					class="my-4 text-3xl md:text-5xl text-purple-800 font-bold leading-tight text-center md:text-left slide-in-bottom-h1">
+					Sway no que te devuelvan de menos.</h1>
+				<p class="font-bold text-yellow-400 md:font-normal leading-normal text-base md:text-black md:text-2xl mb-8 text-center md:text-left slide-in-bottom-subtitle">
+					Una aplicación para registrar préstamos entre personas, con el objetivo de que te devuelvan menos y así evitando problemas.</p>
+
+				<p class="text-blue-400 font-bold pb-8 lg:pb-6 text-center md:text-left fade-in">Descarga nuestra aplicación:</p>
+				<div class="flex w-full justify-center md:justify-start pb-24 lg:pb-0 fade-in">
+					<img src="{{ URL::asset('img/svg/App Store.svg'); }}" class="h-12 pr-4 bounce-top-icons">
+					<img src="{{ URL::asset('img/svg/Play Store.svg'); }}" class="h-12 bounce-top-icons">
+				</div>
+
+			</div>
+
+			<!--Right Col-->
+			<div class="w-full xl:w-3/5 py-6 overflow-y-hidden">
+				<img class="w-5/6 mx-auto lg:mr-0 slide-in-bottom" src="{{ URL::asset('img/svg/devices.svg'); }}">
+			</div>
+
+			<!--Footer-->
+			<div class="w-full pt-16 md:pt-28 pb-6 text-sm text-center md:text-left fade-in">
+				<a class="text-gray-500 no-underline hover:no-underline text-black md:text-white" href="#" id="year"></a>
+			</div>
+
+		</div>
+
+
+	</div>
+	<script>
+		$(document).ready(()=>{
+			console.log('Ready');
+			$('#year').text('©️ '+new Date().getFullYear()+' Sway app, by Moahmed Boughima');
+		})
+	</script>
+</body>
+
 </html>

@@ -167,12 +167,12 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   ),
                   TextButton.icon(
                     style: TextButton.styleFrom(primary: Colors.red, backgroundColor: Colors.yellow[100]),
-                    onPressed: () {
-                      if(_formKey.currentState!.validate()){
+                    onPressed:null
+                      /*if(_formKey.currentState!.validate()){
                         _showMyDialog(title:'Seguro que quieres eliminar tu cuenta',msg:'Una vez aceptado, ya no podras volver a aceder a la cuenta');
-                      }
+                      }*/
                       
-                    },
+                    ,
                     icon: const Icon(Icons.delete, size: 20),
                     label: const Text('Eliminar cuenta',style: TextStyle(fontSize: 18),),
                   ),
